@@ -3,39 +3,79 @@
     src: url('../fonts/kongtext/kongtext.ttf') format('truetype');
 }
 
+
+:root {
+    --main-bg-color: #80B5D5;
+    --border-brown: #5D3A1F;
+    --dark-border: #5D3A1F;
+    --light-brown: #E7C8A3;
+    --medium-brown: #A67B5B;
+    --dark-brown: #5D3A1F;
+    --header-orange: #FFAA4B;
+    --button-orange: #FF9C4B;
+    --username-red: #FF4B4B;
+    --level-orange: #FF9C4B;
+    --xp-purple: #9B59B6;
+    --coin-yellow: #FFD700;
+    --delete-red: #FF4B4B;
+    --complete-green: #4BFF4B;
+    --quest-header-color: #FF9C4B;
+    --quest-box-tan: #D4AF88;
+    --dark-text: #000000;
+}
+
+
+
 body {
-    font-family: 'KongText';
+    font-family: 'KongText', monospace;
     margin: 0;
     padding: 0;
-    overflow: hidden;
     color: #FFFFFF;
-    background-color: #87CEEB;
+    background-color: var(--main-bg-color);
+    min-height: 100vh;
 }
 
 /* Main container that will have the background image */
 .game-container {
     margin: 0 auto;
     position: relative;
-    background-image: url('../images/bg.png');
+    background-color: var(--main-bg-color); /* Fallback */
+    background-image: url('../images/bg.svg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    min-height: 100vh;
     overflow: auto;
+}
+
+/* User profile section styling */
+.user-profile-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.user-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
 /* Profile box styling */
 .profile-box {
-    background-color: #8B5A2B;
-    border: 4px solid #5C3A1D;
+    background-color: var(--dark-brown);
+    border: 4px solid var(--dark-border);
     border-radius: 8px;
     width: 100px;
     height: 100px;
+    min-width: 80px;
 }
 
 /* Username banner */
 .username-banner {
-    background-color: #E74C3C;
-    border: 3px solid #8B4513;
+    background-color: var(--username-red);
+    border: 3px solid var(--border-brown);
     border-radius: 15px;
     color: white;
     font-weight: bold;
@@ -46,8 +86,20 @@ body {
 
 /* Level banner */
 .level-banner {
-    background-color: #E67E22;
-    border: 3px solid #8B4513;
+    background-color: var(--level-orange);
+    border: 3px solid var(--border-brown);
+    border-radius: 15px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px 10px;
+    position: relative;
+}
+
+/* XP banner */
+.xp-banner {
+    background-color: var(--xp-purple);
+    border: 3px solid var(--border-brown);
     border-radius: 15px;
     color: white;
     font-weight: bold;
@@ -65,8 +117,8 @@ body {
 }
 
 .coin-icon {
-    background-color: #F1C40F;
-    border: 2px solid #8B4513;
+    background-color: var(--coin-yellow);
+    border: 2px solid var(--border-brown);
     border-radius: 50%;
     width: 24px;
     height: 24px;
@@ -77,10 +129,27 @@ body {
     font-weight: bold;
 }
 
+/* Main content layout */
+.main-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.menu-section {
+    flex: 1;
+    min-width: 250px;
+}
+
+.quests-section {
+    flex: 3;
+    min-width: 300px;
+}
+
 /* Button styling for add quest button */
 .menu-button {
-    background-color: #F39C12;
-    border: 3px solid #8B4513;
+    background-color: var(--header-orange);
+    border: 3px solid var(--border-brown);
     border-radius: 8px;
     color: #FFFFFF;
     font-weight: bold;
@@ -88,6 +157,14 @@ body {
     padding: 8px;
     margin-bottom: 12px;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    width: 100%;
+    font-family: 'KongText', monospace;
+}
+
+.menu-button:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
 }
 
 /* Category container (for difficulty, timer, date) */
@@ -99,16 +176,16 @@ body {
 
 /* Category body - the main container holding the options */
 .category-body {
-    background-color: #DAB692; /* Light brown background */
-    border: 3px solid #8B4513;
+    background-color: var(--light-brown);
+    border: 3px solid var(--border-brown);
     border-radius: 8px;
     padding: 6px;
 }
 
 /* Category header - the label at the top */
 .category-header {
-    background-color: #F39C12; /* Orange header */
-    border: 3px solid #8B4513;
+    background-color: var(--header-orange);
+    border: 3px solid var(--border-brown);
     border-radius: 8px;
     color: #FFFFFF;
     font-weight: bold;
@@ -120,14 +197,15 @@ body {
     transform: translateX(-50%);
     white-space: nowrap;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+    z-index: 1;
 }
 
 /* Category options - the buttons inside */
 .category-option {
-    background-color: #F39C12; /* Orange */
-    border: 3px solid #8B4513;
+    background-color: var(--header-orange);
+    border: 3px solid var(--border-brown);
     border-radius: 8px;
-    color: black;
+    color: #FFFFFF;
     font-weight: bold;
     text-align: center;
     padding: 5px;
@@ -135,12 +213,19 @@ body {
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
     width: 100%;
     display: block;
+    cursor: pointer;
+    font-family: 'KongText', monospace;
+}
+
+.category-option:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
 }
 
 /* Time and date display */
 .time-display, .date-display {
     background-color: #D1B89E;
-    border: 3px solid #8B4513;
+    border: 3px solid var(--border-brown);
     border-radius: 8px;
     color: #FFFFFF;
     font-weight: bold;
@@ -148,30 +233,41 @@ body {
     padding: 5px;
 }
 
+/* Quest areas container */
+.quest-areas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+}
+
 /* Quest containers */
 .quest-container {
-    background-color: #DAB692; /* Light tan background */
-    border: 4px solid #8B4513;
+    background-color: var(--light-brown);
+    border: 4px solid var(--border-brown);
     border-radius: 10px;
     overflow: hidden;
     position: relative;
-    width: 48%; /* Set width to create space between containers */
+    flex: 1;
+    min-width: 250px;
 }
 
 .quest-header {
-    background-color: #F39C12; /* Orange header */
+    background-color: var(--header-orange);
     color: #FFFFFF;
     font-weight: bold;
     text-align: center;
     padding: 5px 0;
-    border-bottom: 4px solid #8B4513;
+    border-bottom: 4px solid var(--border-brown);
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
     font-size: 14px;
 }
 
 .quest-items-container {
     padding: 10px;
-    min-height: 300px;
+    min-height: 200px;
+    max-height: 60vh;
+    overflow-y: auto;
 }
 
 /* Quest status labels */
@@ -182,19 +278,13 @@ body {
     font-size: 10px;
     font-weight: bold;
     color: black;
-}
-
-/* Quest areas container */
-.quest-areas {
-    display: flex;
-    width: 100%;
-    gap: 20px;
+    cursor: pointer;
 }
 
 /* Individual quest item */
 .quest-item {
-    background-color: #A67B5B; /* Brown background */
-    border: 3px solid #8B4513;
+    background-color: var(--medium-brown);
+    border: 3px solid var(--border-brown);
     border-radius: 8px;
     margin-bottom: 8px;
     padding: 8px 10px;
@@ -249,33 +339,26 @@ body {
     border-radius: 3px;
     font-size: 12px;
     border: 2px solid #3D2A1F;
+    cursor: pointer;
 }
 
 .action-btn-delete {
-    background-color: #E74C3C; /* Red */
+    background-color: var(--delete-red);
     color: white;
 }
 
 .action-btn-complete {
-    background-color: #2ECC71; /* Green */
+    background-color: var(--complete-green);
     color: white;
 }
 
-/* Media query to handle different screen sizes */
-@media (max-width: 1080px) {
-    .game-container {
-        width: 100%;
-        height: 100vh;
-    }
-}
-
-/* Add these styles to your existing CSS file */
-
+/* Title banner */
 .title-banner {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
     padding: 5px;
+    flex-wrap: wrap;
 }
 
 .title-logo {
@@ -288,18 +371,227 @@ body {
 }
 
 .title-text {
-    color: #F39C12;
+    color: var(--header-orange);
     font-size: 32px;
     font-weight: bold;
     text-shadow: 
-        2px 0 0 #8B4513,
-        -2px 0 0 #8B4513,
-        0 2px 0 #8B4513,
-        0 -2px 0 #8B4513,
-        1px 1px 0 #8B4513,
-        -1px -1px 0 #8B4513,
-        1px -1px 0 #8B4513,
-        -1px 1px 0 #8B4513;
+        2px 0 0 var(--border-brown),
+        -2px 0 0 var(--border-brown),
+        0 2px 0 var(--border-brown),
+        0 -2px 0 var(--border-brown),
+        1px 1px 0 var(--border-brown),
+        -1px -1px 0 var(--border-brown),
+        1px -1px 0 var(--border-brown),
+        -1px 1px 0 var(--border-brown);
     letter-spacing: 1px;
-} 
+}
 
+/* Modal styling */
+.quest-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--light-brown);
+    border: 4px solid var(--border-brown);
+    border-radius: 10px;
+    padding: 15px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--border-brown);
+    margin-bottom: 15px;
+}
+
+.modal-header h3 {
+    color: #FFFFFF;
+    font-size: 18px;
+    margin: 0;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.close-button {
+    background-color: var(--delete-red);
+    color: white;
+    border: 2px solid var(--border-brown);
+    border-radius: 5px;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 3px solid var(--border-brown);
+    border-radius: 8px;
+    background-color: #FFF;
+    font-family: 'KongText', monospace;
+    font-size: 12px;
+}
+
+.submit-btn {
+    background-color: var(--complete-green);
+    color: white;
+    border: 3px solid var(--border-brown);
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    font-family: 'KongText', monospace;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1200px) {
+    .container {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .title-text {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .menu-section {
+        width: 100%;
+    }
+    
+    .quests-section {
+        width: 100%;
+    }
+    
+    .title-text {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .user-profile-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .user-stats {
+        width: 100%;
+        align-items: center;
+    }
+    
+    .username-banner, .level-banner, .xp-banner {
+        width: 80%;
+    }
+    
+    .quest-container {
+        width: 100%;
+    }
+    
+    .title-banner {
+        justify-content: center;
+    }
+    
+    .title-text {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .username-banner, .level-banner, .xp-banner {
+        width: 100%;
+    }
+    
+    .category-header {
+        font-size: 14px;
+        padding: 3px 10px;
+    }
+    
+    .category-option {
+        font-size: 12px;
+    }
+    
+    .quest-header {
+        font-size: 12px;
+    }
+    
+    .quest-items-container {
+        max-height: 40vh;
+    }
+    
+    .title-text {
+        font-size: 18px;
+    }
+    
+    .profile-box {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+@media (max-width: 400px) {
+    .action-btn {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+    }
+    
+    .title-text {
+        font-size: 16px;
+    }
+    
+    .title-logo {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .quest-item {
+        padding: 6px 8px;
+    }
+    
+    .difficulty-badge, .time-badge {
+        font-size: 8px;
+    }
+}
