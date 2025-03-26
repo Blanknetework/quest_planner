@@ -1,0 +1,305 @@
+@font-face {
+    font-family: 'KongText';
+    src: url('../fonts/kongtext/kongtext.ttf') format('truetype');
+}
+
+body {
+    font-family: 'KongText';
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    color: #FFFFFF;
+    background-color: #87CEEB;
+}
+
+/* Main container that will have the background image */
+.game-container {
+    margin: 0 auto;
+    position: relative;
+    background-image: url('../images/bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: auto;
+}
+
+/* Profile box styling */
+.profile-box {
+    background-color: #8B5A2B;
+    border: 4px solid #5C3A1D;
+    border-radius: 8px;
+    width: 100px;
+    height: 100px;
+}
+
+/* Username banner */
+.username-banner {
+    background-color: #E74C3C;
+    border: 3px solid #8B4513;
+    border-radius: 15px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px 10px;
+    position: relative;
+}
+
+/* Level banner */
+.level-banner {
+    background-color: #E67E22;
+    border: 3px solid #8B4513;
+    border-radius: 15px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px 10px;
+    position: relative;
+}
+
+/* Coin display */
+.coin-display {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.coin-icon {
+    background-color: #F1C40F;
+    border: 2px solid #8B4513;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+/* Button styling for add quest button */
+.menu-button {
+    background-color: #F39C12;
+    border: 3px solid #8B4513;
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+    margin-bottom: 12px;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Category container (for difficulty, timer, date) */
+.category-container {
+    position: relative;
+    padding-top: 20px;
+    margin-bottom: 15px;
+}
+
+/* Category body - the main container holding the options */
+.category-body {
+    background-color: #DAB692; /* Light brown background */
+    border: 3px solid #8B4513;
+    border-radius: 8px;
+    padding: 6px;
+}
+
+/* Category header - the label at the top */
+.category-header {
+    background-color: #F39C12; /* Orange header */
+    border: 3px solid #8B4513;
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px 15px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Category options - the buttons inside */
+.category-option {
+    background-color: #F39C12; /* Orange */
+    border: 3px solid #8B4513;
+    border-radius: 8px;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    margin: 5px 0;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+    width: 100%;
+    display: block;
+}
+
+/* Time and date display */
+.time-display, .date-display {
+    background-color: #D1B89E;
+    border: 3px solid #8B4513;
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+}
+
+/* Quest containers */
+.quest-container {
+    background-color: #DAB692; /* Light tan background */
+    border: 4px solid #8B4513;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    width: 48%; /* Set width to create space between containers */
+}
+
+.quest-header {
+    background-color: #F39C12; /* Orange header */
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px 0;
+    border-bottom: 4px solid #8B4513;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+    font-size: 14px;
+}
+
+.quest-items-container {
+    padding: 10px;
+    min-height: 300px;
+}
+
+/* Quest status labels */
+.quest-status {
+    position: absolute;
+    right: 8px;
+    top: 5px;
+    font-size: 10px;
+    font-weight: bold;
+    color: black;
+}
+
+/* Quest areas container */
+.quest-areas {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+}
+
+/* Individual quest item */
+.quest-item {
+    background-color: #A67B5B; /* Brown background */
+    border: 3px solid #8B4513;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    color: black;
+}
+
+/* Difficulty badge */
+.difficulty-badge {
+    font-size: 10px;
+    font-weight: bold;
+    margin-right: 10px;
+    text-transform: uppercase;
+}
+
+/* Time badge */
+.time-badge {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* Quest content - the checkbox and text row */
+.quest-content {
+    display: flex;
+    align-items: center;
+    margin-top: 3px;
+}
+
+/* Checkbox styling */
+.checkbox-circle {
+    width: 16px;
+    height: 16px;
+    background-color: #5D3A1F;
+    border-radius: 50%;
+    margin-right: 10px;
+    display: inline-block;
+    border: 2px solid #3D2A1F;
+}
+
+/* Action buttons */
+.action-buttons {
+    display: flex;
+    gap: 3px;
+}
+
+.action-btn {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border-radius: 3px;
+    font-size: 12px;
+    border: 2px solid #3D2A1F;
+}
+
+.action-btn-delete {
+    background-color: #E74C3C; /* Red */
+    color: white;
+}
+
+.action-btn-complete {
+    background-color: #2ECC71; /* Green */
+    color: white;
+}
+
+/* Media query to handle different screen sizes */
+@media (max-width: 1080px) {
+    .game-container {
+        width: 100%;
+        height: 100vh;
+    }
+}
+
+/* Add these styles to your existing CSS file */
+
+.title-banner {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 5px;
+}
+
+.title-logo {
+    background-color: #5D3A1F;
+    border: 3px solid #3D2A1F;
+    border-radius: 6px;
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+}
+
+.title-text {
+    color: #F39C12;
+    font-size: 32px;
+    font-weight: bold;
+    text-shadow: 
+        2px 0 0 #8B4513,
+        -2px 0 0 #8B4513,
+        0 2px 0 #8B4513,
+        0 -2px 0 #8B4513,
+        1px 1px 0 #8B4513,
+        -1px -1px 0 #8B4513,
+        1px -1px 0 #8B4513,
+        -1px 1px 0 #8B4513;
+    letter-spacing: 1px;
+} 
+
