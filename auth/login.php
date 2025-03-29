@@ -1,15 +1,48 @@
+<?php
+session_start();
+require_once '../config/database.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
+    
+    if ($user && password_verify($password, $user['password'])) {
+        if ($user['email_verified'] == 1) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            header("Location: ../index.php");
+            exit();
+        } else {
+            $error = "Please verify your email address before logging in.";
+        }
+    } else {
+        $error = "Invalid email or password";
+    }
+}
+
+?>
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forgot Password - Quest Planner</title>
+    <title>Login - Quest Planner</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
     <style>
         @font-face {
             font-family: 'KongText';
-            src: url('assets/fonts/kongtext/kongtext.ttf') format('truetype');
+            src: url('../assets/fonts/kongtext/kongtext.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -94,23 +127,51 @@
         .auth-link:hover {
             text-decoration: underline;
         }
-        
-        .auth-description {
-            color: var(--dark-text);
-            font-size: 12px;
-            margin-bottom: 15px;
-            text-align: center;
+
+        .social-login {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
         }
-        
-        .message-box {
-            background-color: var(--medium-brown);
+
+        .social-button {
+            width: 48%;
+            padding: 8px 0;
+            text-align: center;
             border: 3px solid var(--border-brown);
-            border-radius: 0;
-            padding: 10px;
-            margin-bottom: 15px;
+            border-radius: 0; /* Square corners for pixel look */
+            font-family: var(--pixel-font);
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .google-btn {
+            background-color: #DB4437;
+            color: white;
+        }
+
+        .facebook-btn {
+            background-color: #4267B2;
+            color: white;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
             color: var(--dark-text);
             font-size: 12px;
-            text-align: center;
+        }
+
+        .divider-line {
+            flex-grow: 1;
+            height: 2px;
+            background-color: var(--border-brown);
+        }
+
+        .divider-text {
+            padding: 0 10px;
         }
     </style>
 </head>
@@ -123,33 +184,30 @@
                 <div class="title-text">QUEST PLANNER</div>
             </div>
             
-            <!-- Forgot Password Form -->
+            <!-- Login Form -->
             <div class="auth-form">
-                <div class="auth-header">FORGOT PASSWORD</div>
-                
-                <p class="auth-description">ENTER YOUR EMAIL ADDRESS AND WE'LL SEND YOU A LINK TO RESET YOUR PASSWORD.</p>
-                
-                <form method="POST" action="forgot_password.php">
+                <div class="auth-header">LOGIN</div>
+                <form method="POST" action="login.php">
                     <input type="email" name="email" class="auth-input" placeholder="EMAIL" required>
-                    <button type="submit" class="auth-button">SEND RESET LINK</button>
+                    <input type="password" name="password" class="auth-input" placeholder="PASSWORD" required>
+                    <button type="submit" class="auth-button">LOGIN</button>
                 </form>
 
-                <!-- Success message (hidden by default) -->
-                <div class="message-box hidden" id="successMessage">
-                    PASSWORD RESET LINK SENT! CHECK YOUR EMAIL.
+                <a href="forgot_password.php" class="auth-link">FORGOT PASSWORD?</a>
+                <a href="register.php" class="auth-link">NEW ADVENTURER? REGISTER</a>
+
+                <div class="auth-divider">
+                    <div class="divider-line"></div>
+                    <div class="divider-text">OR</div>
+                    <div class="divider-line"></div>
                 </div>
 
-                <a href="login.php" class="auth-link">BACK TO LOGIN</a>
+                <div class="social-login">
+                    <a href="#" class="social-button google-btn">GOOGLE</a>
+                    <a href="#" class="social-button facebook-btn">FACEBOOK</a>
+                </div>
             </div>
         </div>
     </div>
-    
-    <script>
-        // This is just for demonstration - would be replaced with actual server response handling
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            document.getElementById('successMessage').classList.remove('hidden');
-        });
-    </script>
 </body>
 </html>

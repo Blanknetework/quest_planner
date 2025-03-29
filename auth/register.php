@@ -1,3 +1,93 @@
+<?php
+// Start the session and include required files before any output
+session_start();
+require_once '../vendor/autoload.php';
+require_once '../config/database.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use Dotenv\Dotenv;
+
+// Load environment variables
+$dotenv = Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+
+// Initialize variables
+$error = null;
+$success = null;
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    
+    try {
+        // Generate verification token
+        $verification_token = bin2hex(random_bytes(32));
+        
+        // Insert user into database
+        $stmt = $pdo->prepare("INSERT INTO users (username, email, password, verification_token) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$username, $email, $password, $verification_token]);
+        
+        // Configure PHPMailer
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host = $_ENV['SMTP_HOST'];
+        $mail->SMTPAuth = true;
+        $mail->Username = $_ENV['SMTP_USERNAME'];
+        $mail->Password = $_ENV['SMTP_PASSWORD'];
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = $_ENV['SMTP_PORT'];
+        
+        $mail->setFrom($_ENV['SMTP_USERNAME'], 'Quest Planner');
+        $mail->addAddress($email, $username);
+        
+        $verification_link = $_ENV['APP_URL'] . "/auth/verify.php?token=" . $verification_token;
+        
+        $mail->isHTML(true);
+        $mail->Subject = 'Verify your Quest Planner account';
+        $mail->Body = "
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #f97316;'>Welcome to Quest Planner!</h2>
+                <p>Hi {$username},</p>
+                <p>Please click the button below to verify your email address:</p>
+                <p style='text-align: center;'>
+                    <a href='{$verification_link}' 
+                       style='background-color: #f97316; 
+                              color: white; 
+                              padding: 10px 20px; 
+                              text-decoration: none; 
+                              border-radius: 5px; 
+                              display: inline-block;'>
+                        Verify Email Address
+                    </a>
+                </p>
+                <p>If the button doesn't work, copy and paste this link into your browser:</p>
+                <p>{$verification_link}</p>
+                <p>If you did not create an account, no further action is required.</p>
+            </div>
+        ";
+        $mail->AltBody = "Welcome to Quest Planner!\n\nPlease click the link below to verify your email address:\n{$verification_link}";
+        
+        if($mail->send()) {
+            $_SESSION['registration_success'] = true;
+            header("Location: verification-sent.php");
+            exit();
+        }
+    } catch(PDOException $e) {
+        if ($e->getCode() == 23000) {
+            $error = "Email already exists";
+        } else {
+            $error = "Registration failed";
+        }
+    } catch(Exception $e) {
+        $error = "Could not send verification email. Please try again later.";
+    }
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +95,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Quest Planner</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
     <style>
         @font-face {
             font-family: 'KongText';
-            src: url('assets/fonts/kongtext/kongtext.ttf') format('truetype');
+            src: url('../assets/fonts/kongtext/kongtext.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -19,7 +109,7 @@
         }
         
         .game-container {
-            background-image: url('assets/images/bg.svg');
+            background-image: url('../assets/images/bg.svg');
             background-size: cover;
             background-attachment: fixed;
             min-height: 100vh;

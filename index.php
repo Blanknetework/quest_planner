@@ -113,7 +113,7 @@
                         <div class="icon-button guild-icon" style="margin-right: 10px;">
                             <div class="icon-label">GUILD</div>
                         </div>
-                        <a href="login.php" class="icon-button settings-icon">
+                        <a href="/auth/login.php" class="icon-button settings-icon">
                             <div class="icon-label">SETTINGS</div>
                         </a>
                     </div>
