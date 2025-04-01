@@ -9,20 +9,20 @@
 </head>
 <body>
     <div class="game-container">
-        <?php
+    <?php
         // Initialize quest data with difficulty levels
-        $quests = [
-            'unfinished' => [
+    $quests = [
+        'unfinished' => [
                 ['id' => 1, 'name' => 'Fry Egg', 'time' => '10m', 'difficulty' => 'Easy']
-            ],
-            'inProgress' => [
+        ],
+        'inProgress' => [
                 ['id' => 2, 'name' => 'Flower arrangement', 'time' => '1h', 'difficulty' => 'Hard'],
                 ['id' => 3, 'name' => 'Wash Dishes', 'time' => '30m', 'difficulty' => 'Easy']
-            ]
-        ];
-        
-        // Handle form submissions
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        ]
+    ];
+    
+    // Handle form submissions
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Process quest data
             if (isset($_POST['action'])) {
                 $action = $_POST['action'];
@@ -89,7 +89,7 @@
                 <div class="title-text">QUEST PLANNER</div>
             </div>
             
-            <!-- Header Section -->
+        <!-- Header Section -->
             <header class="mb-6">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
                     <div class="user-profile-section">
@@ -101,26 +101,29 @@
                             <div class="coin-display">
                                 <div class="coin-icon">C</div>
                                 <span class="font-bold text-sm">20 coins</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Icon menu buttons moved to header -->
-                    <div class="icon-menu-container" style="display: flex;">
-                        <div class="icon-button notify-icon" style="margin-right: 10px;">
-                            <div class="icon-label">NOTIFS</div>
-                        </div>
-                        <div class="icon-button guild-icon" style="margin-right: 10px;">
-                            <div class="icon-label">GUILD</div>
-                        </div>
-                        <a href="/auth/login.php" class="icon-button settings-icon">
-                            <div class="icon-label">SETTINGS</div>
-                        </a>
-                    </div>
                 </div>
-            </header>
+                        </div>
+                    </div>
 
-            <!-- Main Content -->
+                    <!-- Icon menu buttons -->
+                    <div class="header-icons">
+                        <div class="icon-container">
+                            <img src="../assets/images/notif.png" alt="Notifications" class="header-icon">
+                            <span class="icon-label">NOTIFS</span>
+                </div>
+                        <div class="icon-container">
+                            <img src="../assets/images/guild.png" alt="Guild" class="header-icon">
+                            <span class="icon-label">GUILD</span>
+            </div>
+                        <div class="icon-container">
+                            <img src="../assets/images/setting.png" alt="Settings" class="header-icon">
+                            <span class="icon-label">SETTINGS</span>
+                </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
             <div class="main-content">
                 <!-- Left Section - Menu and Controls -->
                 <div class="menu-section">
@@ -134,36 +137,38 @@
                             <button class="category-option difficulty-btn" data-difficulty="Medium">MEDIUM</button>
                             <button class="category-option difficulty-btn" data-difficulty="Hard">HARD</button>
                         </div>
-                    </div>
-                    
+                </div>
+                
                     <!-- Timer Section - with label on top of border -->
                     <div class="category-container mb-4">
                         <div class="category-header">TIMER</div>
                         <div class="category-body pt-3">
                             <div class="time-display" id="timer">00:00:00</div>
                         </div>
-                    </div>
-                    
+                </div>
+                
                     <!-- Date Section - with label on top of border -->
                     <div class="category-container mb-4">
                         <div class="category-header">DATE</div>
                         <div class="category-body pt-3">
                             <div class="date-display" id="currentDate">01/21/25</div>
-                        </div>
-                    </div>
-                    
+                </div>
+            </div>
+
                 </div>
 
                 <!-- Right Section - Quest Areas -->
                 <div class="quests-section">
                     
+                    
+                          
                     <div class="quest-areas">
                         <!-- Unfinished Quests -->
                         <div class="quest-container">
                             <div class="quest-header">UNFINISHED QUEST</div>
                             <div class="quest-status">EDIT</div>
                             <div class="quest-items-container">
-                                <?php foreach ($quests['unfinished'] as $quest): ?>
+                    <?php foreach ($quests['unfinished'] as $quest): ?>
                                 <div class="quest-item" data-id="<?php echo $quest['id']; ?>">
                                     <div class="flex justify-between">
                                         <div>
@@ -195,12 +200,12 @@
                                         <div>
                                             <span class="difficulty-badge"><?php echo $quest['difficulty']; ?></span>
                                             <span class="time-badge"><?php echo $quest['time']; ?></span>
-                                        </div>
+                    </div>
                                         <div class="action-buttons">
                                             <button class="action-btn action-btn-delete delete-quest" data-id="<?php echo $quest['id']; ?>">✕</button>
                                             <button class="action-btn action-btn-complete complete-quest" data-id="<?php echo $quest['id']; ?>">✓</button>
-                                        </div>
-                                    </div>
+                </div>
+            </div>
                                     <div class="quest-content">
                                         <div class="checkbox-circle"></div>
                                         <span class="text-sm font-bold"><?php echo $quest['name']; ?></span>
@@ -247,4 +252,4 @@
 
     <script src="assets/js/script.js"></script>
 </body>
-</html>
+</html> 

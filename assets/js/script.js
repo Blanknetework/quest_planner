@@ -186,6 +186,22 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal();
         }
     });
+
+    const passwordFields = document.querySelectorAll('.password-field');
+    
+    passwordFields.forEach(field => {
+        const input = field.querySelector('input');
+        const toggle = field.querySelector('.password-toggle');
+        
+        toggle.addEventListener('click', function() {
+            // Toggle between password and text type
+            if (input.type === 'password') {
+                input.type = 'text';
+            } else {
+                input.type = 'password';
+            }
+        });
+    });
 });
 
 // Adjust UI based on viewport size

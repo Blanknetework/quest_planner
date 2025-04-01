@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
         .game-container {
-            background-image: url('assets/images/bg.svg');
+            background-image: url('../assets/images/bg.svg');
             background-size: cover;
             background-attachment: fixed;
             min-height: 100vh;
@@ -94,6 +94,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-family: var(--pixel-font);
             font-size: 12px;
             color: var(--dark-text);
+        }
+
+        .auth-input[type="password"] {
+            font-family: Arial, sans-serif !important; /* Our font KongText dont support special characters so wala tayong choice, kung hindi gumamit ng standard font */
+            letter-spacing: 2px;
+            color: #000000;
         }
 
         .auth-button {
