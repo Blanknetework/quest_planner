@@ -291,13 +291,7 @@ body {
     color: black;
 }
 
-/* Difficulty badge */
-.difficulty-badge {
-    font-size: 10px;
-    font-weight: bold;
-    margin-right: 10px;
-    text-transform: uppercase;
-}
+
 
 /* Time badge */
 .time-badge {
@@ -393,91 +387,167 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
+.quest-modal.hidden {
+    display: none;
+}
+
 .modal-content {
-    background-color: var(--light-brown);
-    border: 4px solid var(--border-brown);
+    background-color: #E6B17A;
+    border: 4px solid #5C2F22;
     border-radius: 10px;
-    padding: 15px;
+    padding: 20px;
     width: 90%;
-    max-width: 400px;
-    max-height: 90vh;
-    overflow-y: auto;
+    max-width: 650px;
+    position: relative;
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 10px;
-    border-bottom: 3px solid var(--border-brown);
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .modal-header h3 {
-    color: #FFFFFF;
-    font-size: 18px;
+    color: #5C2F22;
+    font-size: 20px;
     margin: 0;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+    width: 100%;
+    text-align: center;
+    font-family: 'KongText', monospace;
+    text-transform: uppercase;
 }
 
 .close-button {
-    background-color: var(--delete-red);
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #FF4B4B;
     color: white;
-    border: 2px solid var(--border-brown);
-    border-radius: 5px;
-    width: 25px;
-    height: 25px;
+    border: 2px solid #5C2F22;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-weight: bold;
+    z-index: 1;
 }
 
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.form-group input, .form-group select {
-    width: 100%;
-    padding: 8px;
-    border: 3px solid var(--border-brown);
-    border-radius: 8px;
-    background-color: #FFF;
-    font-family: 'KongText', monospace;
-    font-size: 12px;
-}
-
+/* Submit button styling */
 .submit-btn {
-    background-color: var(--complete-green);
+    background-color: #FF9C4B;
     color: white;
-    border: 3px solid var(--border-brown);
-    border-radius: 8px;
-    padding: 8px 15px;
+    border: 3px solid #5C2F22;
+    border-radius: 10px;
+    padding: 10px;
+    font-family: 'KongText', monospace;
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     width: 100%;
-    margin-top: 10px;
-    font-family: 'KongText', monospace;
+    margin-top: 20px;
+    text-transform: uppercase;
 }
 
-.hidden {
-    display: none;
+.quest-form-container {
+    width: 100%;
+}
+
+.quest-input-section {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.quest-label {
+    text-align: center;
+    color: #000;
+    font-size: 14px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.quest-input-box {
+    background-color: #8B4513;
+    padding: 15px;
+    border: none;
+    width: 100%;
+    color: white;
+    text-align: center;
+    font-family: 'KongText', monospace;
+    font-size: 16px;
+}
+
+.quest-input-box input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    font-family: 'KongText', monospace;
+    font-size: 16px;
+    text-align: center;
+}
+
+.quest-input-box input:focus {
+    outline: none;
+}
+
+.difficulty-select {
+    cursor: pointer;
+    position: relative;
+}
+
+.selected-difficulty {
+    color: white;
+    font-size: 16px;
+}
+
+.quest-datetime-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.quest-date-section,
+.quest-time-section,
+.quest-timer-section {
+    flex: 1;
+}
+
+/* Tooltip style */
+.difficulty-tooltip {
+    position: absolute;
+    right: -230px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #FF8C42;
+    color: white;
+    padding: 15px;
+    border: 3px solid #663300;
+    width: 230px;
+    font-size: 12px;
+    text-align: center;
+    z-index: 5;
+    line-height: 1.3;
+}
+
+.difficulty-tooltip::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #FF8C42;
 }
 
 /* Media Queries for Responsiveness */
@@ -544,10 +614,9 @@ body {
         justify-content: center;
         width: 100%;
         gap: 15px;
-        margin-top: 20px; /* Space after the coins display */
+        margin-top: 20px; 
         padding: 10px;
-        /* Move to bottom of profile section */
-        order: 99; /* High number ensures it goes to the bottom */
+        order: 99; 
     }
 
     .profile-info {
@@ -730,4 +799,250 @@ body {
         height: 70px;
         padding: 10px;
     }
+}
+
+
+#addQuestBtn {
+    position: relative;
+    background: linear-gradient(to bottom, #FFAA4B, #FF824E);
+    border: 7px solid #5C2F22;
+    border-radius: 15px;
+    width: 279px;
+    height: 203px;
+    font-family: 'KongText', monospace;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #5C2F22;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end; /* Text at bottom */
+    padding-bottom: 20px;
+    box-sizing: border-box;
+    transition: transform 0.2s;
+}
+
+#addQuestBtn::before {
+    content: '';
+    background-image: url('../images/add.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 80px;
+    height: 80px;
+    display: block;
+    margin-bottom: 15px;
+    position: relative;
+    top: -10px;
+}
+
+#addQuestBtn:hover {
+    transform: scale(1.03);
+}
+
+#addQuestBtn:active {
+    transform: scale(0.98);
+}
+
+/* For mobile responsiveness (you may want to adjust these values) */
+@media (max-width: 768px) {
+    #addQuestBtn {
+        width: 220px;
+        height: 160px;
+        margin-top: 30px;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 16px;
+        border-width: 6px;
+    }
+    
+    #addQuestBtn::before {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    #addQuestBtn {
+        width: 180px;
+        height: 140px;
+        font-size: 14px;
+        border-width: 5px;
+    }
+    
+    #addQuestBtn::before {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* Styling for the difficulty section to match the image */
+.difficulty-header {
+    background-color: #FF9C4B;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px 0;
+    border: 4px solid #5C2F22;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    text-transform: uppercase;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+.difficulty-container {
+    background-color: #D4B796;
+    border: 4px solid #5C2F22;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    padding: 10px;
+}
+
+.difficulty-quest {
+    background-color: #D4B796;
+    padding: 15px;
+    border: none;
+    position: relative;
+}
+
+.quest-label {
+    font-size: 12px;
+    color: #5C2F22;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.quest-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #5C2F22;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 5px 0 10px 0;
+    font-family: 'KongText', monospace;
+    letter-spacing: 1px;
+}
+
+.quest-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quest-difficulty-label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #5C2F22;
+    text-transform: uppercase;
+}
+
+.quest-difficulty-value {
+    font-size: 12px;
+    font-weight: bold;
+    color: #5C2F22;
+    text-transform: uppercase;
+}
+
+
+.ongoing-quests-header {
+    width: 100%;
+    height: 40px;
+    background-color: #FF9C4B;
+    color: white;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid #5C2F22;
+    border-radius: 10px 10px 0 0;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.ongoing-quests-body {
+    width: 100%;
+    height: 153px;
+    background-color: #D4B796;
+    border: 4px solid #5C2F22;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.quest-details {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 8px;
+}
+
+.quest-label-container {
+    display: flex;
+    width: 242px;
+    height: 17px;
+    align-items: center;
+}
+
+.quest-label {
+    color: #5C2F22;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.quest-name-container {
+    width: 242px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.quest-name {
+    color: #5C2F22;
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.quest-difficulty-container {
+    width: 100%;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+    padding-bottom: 10px;
+}
+
+.difficulty-label {
+    width: 145px;
+    color: #5C2F22;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.difficulty-value {
+    width: 84px;
+    color: #5C2F22;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* For pixel-perfect edges */
+.ongoing-quests-container * {
+    image-rendering: pixelated;
 }

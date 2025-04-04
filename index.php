@@ -1,3 +1,15 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: auth/login.php');
+    exit;
+}
+?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -129,15 +141,24 @@
                 <div class="menu-section">
                     <button class="menu-button mb-4" id="addQuestBtn">ADD QUEST</button>
                     
-                    <!-- Difficulty Section - with label on top of border -->
-                    <div class="category-container mb-4">
-                        <div class="category-header">DIFFICULTY</div>
-                        <div class="category-body pt-3">
-                            <button class="category-option difficulty-btn" data-difficulty="Easy">EASY</button>
-                            <button class="category-option difficulty-btn" data-difficulty="Medium">MEDIUM</button>
-                            <button class="category-option difficulty-btn" data-difficulty="Hard">HARD</button>
+                    <!-- Difficulty Section - restyled to match the image -->
+                    <div class="ongoing-quests-container">
+                        <div class="quest-container">
+                            <div class="quest-header">ONGOING QUESTS</div>
+                            <div class="quest-items-container">
+                                <?php foreach ($quests['inProgress'] as $quest): ?>
+                                <div class="quest-item" data-id="<?php echo $quest['id']; ?>">
+                                    <div class="quest-label">Quest:</div>
+                                    <div class="quest-title"><?php echo $quest['name']; ?></div>
+                                    <div class="quest-info">
+                                        <div class="quest-difficulty-tag">Difficulty:</div>
+                                        <div class="difficulty-value"><?php echo $quest['difficulty']; ?></div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
-                </div>
+                    </div>
                 
                     <!-- Timer Section - with label on top of border -->
                     <div class="category-container mb-4">
@@ -189,36 +210,36 @@
                             </div>
                         </div>
 
-                        <!-- In Progress Quests -->
-                        <div class="quest-container">
-                            <div class="quest-header">IN PROGRESS QUEST</div>
-                            <div class="quest-status">DONE</div>
-                            <div class="quest-items-container">
-                                <?php foreach ($quests['inProgress'] as $quest): ?>
-                                <div class="quest-item" data-id="<?php echo $quest['id']; ?>">
-                                    <div class="flex justify-between">
-                                        <div>
-                                            <span class="difficulty-badge"><?php echo $quest['difficulty']; ?></span>
-                                            <span class="time-badge"><?php echo $quest['time']; ?></span>
-                    </div>
-                                        <div class="action-buttons">
-                                            <button class="action-btn action-btn-delete delete-quest" data-id="<?php echo $quest['id']; ?>">✕</button>
-                                            <button class="action-btn action-btn-complete complete-quest" data-id="<?php echo $quest['id']; ?>">✓</button>
+                    <!-- In Progress Quests -->
+                    <div class="quest-container">
+                        <div class="quest-header">IN PROGRESS QUEST</div>
+                        <div class="quest-status">DONE</div>
+                        <div class="quest-items-container">
+                            <?php foreach ($quests['inProgress'] as $quest): ?>
+                            <div class="quest-item" data-id="<?php echo $quest['id']; ?>">
+                                <div class="flex justify-between">
+                                    <div>
+                                        <span class="difficulty-badge"><?php echo $quest['difficulty']; ?></span>
+                                        <span class="time-badge"><?php echo $quest['time']; ?></span>
                 </div>
+                                    <div class="action-buttons">
+                                        <button class="action-btn action-btn-delete delete-quest" data-id="<?php echo $quest['id']; ?>">✕</button>
+                                        <button class="action-btn action-btn-complete complete-quest" data-id="<?php echo $quest['id']; ?>">✓</button>
             </div>
-                                    <div class="quest-content">
-                                        <div class="checkbox-circle"></div>
-                                        <span class="text-sm font-bold"><?php echo $quest['name']; ?></span>
-                                    </div>
+        </div>
+                                <div class="quest-content">
+                                    <div class="checkbox-circle"></div>
+                                    <span class="text-sm font-bold"><?php echo $quest['name']; ?></span>
                                 </div>
-                                <?php endforeach; ?>
                             </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
     <!-- Add Quest Modal -->
     <div id="addQuestModal" class="quest-modal hidden">
@@ -227,29 +248,73 @@
                 <h3>ADD NEW QUEST</h3>
                 <button id="closeModal" class="close-button">✕</button>
             </div>
-            <form id="addQuestForm" method="POST">
-                <input type="hidden" name="action" value="add_quest">
-                <div class="form-group">
-                    <label for="quest_name">Quest Name:</label>
-                    <input type="text" id="quest_name" name="quest_name" required>
+            <form id="questForm">
+                <div class="quest-form-container">
+                    <!-- Quest Name Section -->
+                    <div class="quest-input-section">
+                        <div class="quest-label">QUEST NAME</div>
+                        <div class="quest-input-box">
+                            <input type="text" id="quest_name" name="quest_name" placeholder="Gotta wash dishes" required>
+                        </div>
+                    </div>
+
+                    <!-- Choose/Input Quest Section -->
+                    <div class="quest-input-section">
+                        <div class="quest-label">Choose/Input Quest</div>
+                        <div class="quest-input-box">
+                            <input type="text" id="quest_input" name="quest_input" placeholder="Wash Dishes" required>
+                        </div>
+                    </div>
+
+                    <!-- Quest Difficulty Section -->
+                    <div class="quest-input-section">
+                        <div class="quest-label">Quest Difficulty</div>
+                        <div class="quest-input-box difficulty-select">
+                            <div class="selected-difficulty">Easy</div>
+                        </div>
+                        <div class="difficulty-tooltip">
+                            After adding quest, choose quest difficulty.
+                            <br>NOTE: There are preset quests for each difficulty. Specific quest are rewarded with fixed XP
+                        </div>
+                    </div>
+
+                    <!-- Quest Date/Time Section -->
+                    <div class="quest-datetime-container">
+                        <div class="quest-date-section">
+                            <div class="quest-label">Set Quest Date</div>
+                            <div class="quest-input-box">
+                                <input type="text" id="quest_date" name="quest_date" placeholder="04/03/25" required>
+                            </div>
+                        </div>
+
+                        <div class="quest-time-section">
+                            <div class="quest-label">Set Quest Time</div>
+                            <div class="quest-input-box">
+                                <input type="text" id="quest_time" name="quest_time" placeholder="10:30 PM" required>
+                            </div>
+                        </div>
+
+                        <div class="quest-timer-section">
+                            <div class="quest-label">Set Quest Timer</div>
+                            <div class="quest-input-box">
+                                <input type="text" id="quest_timer" name="quest_timer" placeholder="01:00:00" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">ADD QUEST</button>
                 </div>
-                <div class="form-group">
-                    <label for="difficulty">Difficulty:</label>
-                    <select id="difficulty" name="difficulty" required>
-                        <option value="Easy">Easy</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Hard">Hard</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="time">Estimated Time:</label>
-                    <input type="text" id="time" name="time" placeholder="e.g. 10m, 1h, 30m" required>
-                </div>
-                <button type="submit" class="submit-btn">Add Quest</button>
             </form>
         </div>
     </div>
 
-    <script src="assets/js/script.js"></script>
+<script>
+// Inline debugging script
+document.getElementById('addQuestBtn').addEventListener('click', function() {
+    console.log('Add Quest button clicked (inline)');
+    document.getElementById('addQuestModal').classList.remove('hidden');
+});
+</script>
+
 </body>
 </html> 
