@@ -19,27 +19,30 @@ $success = null;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $email = $_POST['email'];
-        $password = $_POST['password'];
-        $confirm_password = $_POST['confirm_password'];
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+    $full_name = $_POST['full_name'] ?? '';
+    $gender = $_POST['gender'] ?? '';
+    $date_of_birth = $_POST['date_of_birth'] ?? '';
 
-        //  password validation
-        if (strlen($password) < 8 || strlen($password) > 20) {
-            $error = "Password must be between 8 and 20 characters long";
-        } elseif ($password !== $confirm_password) {
-            $error = "Passwords do not match!";
-        } else {
+    //  password validation
+    if (strlen($password) < 8 || strlen($password) > 20) {
+        $error = "Password must be between 8 and 20 characters long";
+    } elseif ($password !== $confirm_password) {
+        $error = "Passwords do not match!";
+    } else {
     try {
         // Generate verification token
         $verification_token = bin2hex(random_bytes(32));
         
         // Insert user into database
-        $stmt = $pdo->prepare("INSERT INTO users (username, email, password, verification_token) VALUES (?, ?, ?, ?)");
-                $stmt->execute([$username, $email, password_hash($password, PASSWORD_DEFAULT), $verification_token]);
+        $stmt = $pdo->prepare("INSERT INTO users (username, email, password, verification_token, full_name, gender, date_of_birth, level) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$username, $email, password_hash($password, PASSWORD_DEFAULT), $verification_token, $full_name, $gender, $date_of_birth, 1]);
         
         // Configure PHPMailer
         $mail = new PHPMailer(true);
         $mail->isSMTP();
-        $mail->Host = $_ENV['SMTP_HOST'];
+        $mail->Host = $_ENV['SMTP_HOST'] ?? 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = $_ENV['SMTP_USERNAME'];
         $mail->Password = $_ENV['SMTP_PASSWORD'];
@@ -145,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
         .game-container {
-            background-image: url('../assets/images/bg.svg');
+            background-image: url('../assets/images/bggg.jpg');
             background-size: cover;
             background-attachment: fixed;
             min-height: 100vh;
@@ -238,7 +241,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             padding: 8px 0;
             text-align: center;
             border: 3px solid var(--border-brown);
-            border-radius: 0; /* Square corners for pixel look */
+            border-radius: 0;
             font-family: var(--pixel-font);
             font-size: 12px;
             cursor: pointer;
@@ -271,6 +274,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         .divider-text {
             padding: 0 10px;
+        }
+
+        .title-banner {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .title-box {
+            width: 56px;
+            height: 50px;
+            background-color: #4D2422;
+            border-radius: 10px;
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+
+        .title-image {
+            max-width: 250px;
+            height: auto;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
         }
         
         .form-group {
@@ -344,8 +372,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="container mx-auto px-4 py-4">
             <!-- Title Banner -->
             <div class="title-banner">
-                <div class="title-logo"></div>
-                <div class="title-text">QUEST PLANNER</div>
+                <div class="title-box"></div>
+                <img src="../assets/images/Quest-Planner.png" alt="QUEST PLANNER" class="title-image">
             </div>
             
             <!-- Registration Form -->

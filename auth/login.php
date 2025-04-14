@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($user['email_verified'] == 1) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
+            $_SESSION['level'] = $user['level'] ?? 1;
             header("Location: ../index.php");
             exit();
         } else {
@@ -47,12 +48,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-style: normal;
         }
         
+        @font-face {
+            font-family: 'SpenbebGame';
+            src: url('../assets/fonts/spenbeb-game-font/SpenbebGame-R9q46.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
         :root {
             --pixel-font: 'KongText', 'Courier New', monospace, system-ui;
         }
         
         .game-container {
-            background-image: url('../assets/images/bg.svg');
+            background-image: url('../assets/images/bggg.jpg');
             background-size: cover;
             background-attachment: fixed;
             min-height: 100vh;
@@ -200,6 +208,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .divider-text {
             padding: 0 10px;
         }
+
+        .title-banner {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .title-box {
+            width: 56px;
+            height: 50px;
+            background-color: #4D2422;
+            border-radius: 10px;
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+
+        .title-image {
+            max-width: 250px;
+            height: auto;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -207,8 +240,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="container mx-auto px-4 py-4">
             <!-- Title Banner -->
             <div class="title-banner">
-                <div class="title-logo"></div>
-                <div class="title-text">QUEST PLANNER</div>
+                <div class="title-box"></div>
+                <img src="../assets/images/Quest-Planner.png" alt="QUEST PLANNER" class="title-image">
             </div>
             
             <!-- Login Form -->

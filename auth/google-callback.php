@@ -55,7 +55,7 @@ try {
             $hashed_password = password_hash($random_password, PASSWORD_DEFAULT);
             
             // Insert new user
-            $stmt = $pdo->prepare("INSERT INTO users (username, email, password, google_id, email_verified) VALUES (?, ?, ?, ?, 1)");
+            $stmt = $pdo->prepare("INSERT INTO users (username, email, password, google_id, email_verified, level) VALUES (?, ?, ?, ?, 1, 1)");
             $stmt->execute([$name, $email, $hashed_password, $google_id]);
             
             $user_id = $pdo->lastInsertId();
@@ -115,6 +115,7 @@ try {
         // Set session and redirect
         $_SESSION['user_id'] = $user_id;
         $_SESSION['username'] = $name;
+        $_SESSION['level'] = 1;
         header('Location: ../index.php');
         exit();
     }

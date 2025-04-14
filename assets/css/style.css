@@ -74,8 +74,8 @@ body {
 
 /* Username banner */
 .username-banner {
-    background-color: var(--username-red);
-    border: 3px solid var(--border-brown);
+    background-color: #5C2F22;
+    border: 3px solid #FFAA4B;
     border-radius: 15px;
     color: white;
     font-weight: bold;
@@ -265,7 +265,7 @@ body {
 
 .quest-items-container {
     padding: 10px;
-    min-height: 200px;
+    min-height: 500px;
     max-height: 60vh;
     overflow-y: auto;
 }
@@ -345,6 +345,9 @@ body {
     background-color: var(--complete-green);
     color: white;
 }
+
+
+
 
 /* Title banner */
 .title-banner {
@@ -476,7 +479,7 @@ body {
 }
 
 .quest-input-box {
-    background-color: #8B4513;
+    background: linear-gradient(to bottom, #84503B, #75341A);
     padding: 15px;
     border: none;
     width: 100%;
@@ -708,7 +711,7 @@ body {
 
 .profile-container {
     flex: 1;
-    min-width: 300px; /* Ensure minimum width for profile content */
+    min-width: 300px; 
 }
 
 .header-icons {
@@ -730,8 +733,8 @@ body {
     position: relative;
     cursor: pointer;
     transition: transform 0.2s;
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
 }
 
 .icon-container:hover {
@@ -739,8 +742,8 @@ body {
 }
 
 .header-icon {
-    width: 40px;
-    height: 40px;
+    width: 80px;
+    height: 80px;
     object-fit: contain;
     margin-bottom: 8px;
 }

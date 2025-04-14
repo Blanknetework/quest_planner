@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
         .game-container {
-            background-image: url('../assets/images/bg.svg');
+            background-image: url('../assets/images/bggg.jpg');
             background-size: cover;
             background-attachment: fixed;
             min-height: 100vh;
@@ -208,6 +208,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             text-align: center;
         }
 
+        .title-banner {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .title-box {
+            width: 56px;
+            height: 50px;
+            background-color: #4D2422;
+            border-radius: 10px;
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+
+        .title-image {
+            max-width: 250px;
+            height: auto;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
         .auth-link:hover {
             text-decoration: underline;
         }
@@ -234,10 +259,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="game-container">
         <div class="container mx-auto px-4 py-4">
-            <!-- Title Banner -->
-            <div class="title-banner">
-                <div class="title-logo"></div>
-                <div class="title-text">QUEST PLANNER</div>
+            <!-- Title Banner -->               
+             <div class="title-banner">
+                <div class="title-box"></div>
+                <img src="../assets/images/Quest-Planner.png" alt="QUEST PLANNER" class="title-image">
             </div>
             
             <!-- Forgot Password Form -->

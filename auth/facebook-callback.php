@@ -86,7 +86,7 @@ try {
             $random_password = bin2hex(random_bytes(8));
             $hashed_password = password_hash($random_password, PASSWORD_DEFAULT);
             
-            $stmt = $pdo->prepare("INSERT INTO users (username, email, password, facebook_id, email_verified) VALUES (?, ?, ?, ?, 1)");
+            $stmt = $pdo->prepare("INSERT INTO users (username, email, password, facebook_id, email_verified, level) VALUES (?, ?, ?, ?, 1, 1)");
             $stmt->execute([$name, $email, $hashed_password, $facebook_id]);
             
             $user_id = $pdo->lastInsertId();
@@ -146,6 +146,7 @@ try {
 
         $_SESSION['user_id'] = $user_id;
         $_SESSION['username'] = $name;
+        $_SESSION['level'] = 1;
         header('Location: ../index.php');
         exit;
 

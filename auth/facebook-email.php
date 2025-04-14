@@ -17,6 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Please enter a valid email address.";
+    } else if (empty($_POST['username'])) {
+        $error = "Please choose a username.";
     } else {
         try {
             // Check if email already exists
@@ -38,22 +40,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </ul>
                     </div>";
             } else {
-                // Create new user
-                $random_password = bin2hex(random_bytes(8));
-                $hashed_password = password_hash($random_password, PASSWORD_DEFAULT);
-                
-                $stmt = $pdo->prepare("INSERT INTO users (username, email, password, facebook_id, email_verified) VALUES (?, ?, ?, ?, 1)");
-                $stmt->execute([$facebook_data['name'], $email, $hashed_password, $facebook_data['facebook_id']]);
-                
-                $user_id = $pdo->lastInsertId();
-                
-                // Set session and cleanup
-                $_SESSION['user_id'] = $user_id;
-                $_SESSION['username'] = $facebook_data['name'];
-                unset($_SESSION['facebook_data']);
-                
-                header('Location: ../index.php');
-                exit;
+                // Check if username already exists
+                $username = filter_var($_POST['username'], FILTER_SANITIZE_STRING);
+                $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+                $stmt->execute([$username]);
+                if ($stmt->fetch()) {
+                    $error = "
+                        <div class='flex items-center justify-center gap-2'>
+                            <svg class='w-6 h-6' fill='currentColor' viewBox='0 0 20 20'>
+                                <path fill-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z' clip-rule='evenodd'/>
+                            </svg>
+                            <span>This username is already taken!</span>
+                        </div>
+                        <div class='mt-2 text-sm'>
+                            Please try a different username.
+                        </div>";
+                } else {
+                    // Create new user
+                    $random_password = bin2hex(random_bytes(8));
+                    $hashed_password = password_hash($random_password, PASSWORD_DEFAULT);
+                    
+                    $stmt = $pdo->prepare("INSERT INTO users (username, email, password, facebook_id, email_verified, level) VALUES (?, ?, ?, ?, 1, 1)");
+                    $stmt->execute([$username, $email, $hashed_password, $facebook_data['facebook_id']]);
+                    
+                    $user_id = $pdo->lastInsertId();
+                    
+                    // Set session and cleanup
+                    $_SESSION['user_id'] = $user_id;
+                    $_SESSION['username'] = $username;
+                    $_SESSION['level'] = 1;
+                    unset($_SESSION['facebook_data']);
+                    
+                    header('Location: ../index.php');
+                    exit;
+                }
             }
         } catch (PDOException $e) {
             $error = "An error occurred. Please try again.";
@@ -83,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         .game-container {
-            background-image: url('../assets/images/bg.svg');
+            background-image: url('../assets/images/bggg.jpg');
             background-size: cover;
             background-attachment: fixed;
             min-height: 100vh;
@@ -235,14 +255,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 20px;
             line-height: 1.5;
         }
+
+        .title-banner {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .title-box {
+            width: 56px;
+            height: 50px;
+            background-color: #4D2422;
+            border-radius: 10px;
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+
+        .title-image {
+            max-width: 250px;
+            height: auto;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="game-container">
         <div class="container mx-auto px-4 py-4">
+            <!-- Title Banner -->
             <div class="title-banner">
-                <div class="title-logo"></div>
-                <div class="title-text">QUEST PLANNER</div>
+                <div class="title-box"></div>
+                <img src="../assets/images/Quest-Planner.png" alt="QUEST PLANNER" class="title-image">
             </div>
             
             <div class="auth-form">
@@ -263,10 +309,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <svg class="facebook-icon" viewBox="0 0 24 24">
                         <path fill="#4267B2" d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96A10 10 0 0 0 22 12.06C22 6.53 17.5 2.04 12 2.04Z"/>
                     </svg>
-                    Please provide your email address to complete your registration
+                    Please choose a username and provide your email address to complete your registration
                 </div>
                 
                 <form method="POST" action="facebook-email.php">
+                    <input 
+                        type="text" 
+                        name="username" 
+                        class="auth-input" 
+                        placeholder="CHOOSE A USERNAME" 
+                        required
+                        autocomplete="username"
+                    >
                     <input 
                         type="email" 
                         name="email" 
@@ -285,13 +339,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-        // Add focus effect to input
-        document.querySelector('.auth-input').addEventListener('focus', function() {
-            this.style.transform = 'scale(1.02)';
-        });
+        // Add focus effect to inputs
+        const inputs = document.querySelectorAll('.auth-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.transform = 'scale(1.02)';
+            });
 
-        document.querySelector('.auth-input').addEventListener('blur', function() {
-            this.style.transform = 'scale(1)';
+            input.addEventListener('blur', function() {
+                this.style.transform = 'scale(1)';
+            });
         });
     </script>
 </body>
