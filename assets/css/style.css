@@ -35,11 +35,11 @@ body {
     min-height: 100vh;
 }
 
-/* Main container that will have the background image */
+
 .game-container {
     margin: 0 auto;
     position: relative;
-    background-color: var(--main-bg-color); /* Fallback */
+    background-color: var(--main-bg-color); 
     background-image: url('../images/bg.svg');
     background-size: cover;
     background-position: center;
@@ -48,7 +48,7 @@ body {
     overflow: auto;
 }
 
-/* User profile section styling */
+
 .user-profile-section {
     display: flex;
     align-items: flex-start;
@@ -768,7 +768,7 @@ body {
     border-radius: 50%;
 }
 
-/* Responsive styles */
+
 @media (max-width: 480px) {
     .header-icons {
         gap: 10px;
@@ -822,7 +822,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end; /* Text at bottom */
+    justify-content: flex-end; 
     padding-bottom: 20px;
     box-sizing: border-box;
     transition: transform 0.2s;
@@ -850,7 +850,7 @@ body {
     transform: scale(0.98);
 }
 
-/* For mobile responsiveness (you may want to adjust these values) */
+
 @media (max-width: 768px) {
     #addQuestBtn {
         width: 220px;
@@ -882,7 +882,6 @@ body {
     }
 }
 
-/* Styling for the difficulty section to match the image */
 .difficulty-header {
     background-color: #FF9C4B;
     color: white;

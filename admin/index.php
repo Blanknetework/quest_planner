@@ -81,7 +81,7 @@ for ($i = 6; $i >= 0; $i--) {
 $verifiedCount = $stats['verified_users'];
 $unverifiedCount = $stats['unverified_users'];
 
-// Check if this is a deletion request
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
     try {
         // Get the user ID
@@ -115,12 +115,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="assets/css/admin.css">
-    <!-- Add Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 </head>
 <body>
     <div class="admin-container">
-        <!-- Admin Header -->
         <div class="admin-header">
             <div class="title-banner">
                 <div class="title-logo"></div>
@@ -350,14 +348,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 try {
                     const ctx = document.getElementById('userChart').getContext('2d');
                     new Chart(ctx, {
-                        type: 'doughnut', // Changed to doughnut for better appearance
+                        type: 'doughnut', e
                         data: {
                             labels: ['Verified Users', 'Unverified Users'],
                             datasets: [{
                                 data: [<?php echo $verifiedCount; ?>, <?php echo $unverifiedCount; ?>],
                                 backgroundColor: [
-                                    '#6ABF69', // Green for verified
-                                    '#E9A03B'  // Orange for unverified
+                                    '#6ABF69', 
+                                    '#E9A03B'  
                                 ],
                                 borderColor: [
                                     '#5C2F22',
@@ -369,10 +367,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
-                            cutout: '60%', // Makes the doughnut chart look nicer
+                            cutout: '60%',
                             plugins: {
                                 legend: {
-                                    display: false // Hide default legend since we're making our own
+                                    display: false 
                                 },
                                 tooltip: {
                                     callbacks: {
