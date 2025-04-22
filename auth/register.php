@@ -159,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .auth-form {
             background-color: var(--quest-box-tan);
             border: 4px solid var(--border-brown);
-            border-radius: 0; /* Square corners for pixel look */
+            border-radius: 0; 
             padding: 20px;
             max-width: 400px;
             margin: 0 auto;
@@ -185,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             padding: 8px;
             margin-bottom: 15px;
             border: 3px solid var(--border-brown);
-            border-radius: 0; /* Square corners for pixel look */
+            border-radius: 0; 
             background-color: #FFF;
             font-family: var(--pixel-font);
             font-size: 12px;
@@ -202,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background-color: var(--button-orange);
             color: white;
             border: 3px solid var(--border-brown);
-            border-radius: 0; /* Square corners for pixel look */
+            border-radius: 0;
             padding: 8px 15px;
             font-weight: bold;
             cursor: pointer;
@@ -400,7 +400,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 <?php endif; ?>
 
-                <!-- Only show the form if registration was not successful -->
+       
                 <?php if(!isset($success)): ?>
                         <form method="POST" action="register.php" id="registerForm" onsubmit="return validateForm()">
                         <div class="form-group">
@@ -509,7 +509,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 return true;
             }
 
-            // Update your existing password validation script
+          
             document.getElementById('password').addEventListener('input', checkPasswords);
             document.getElementById('confirm_password').addEventListener('input', checkPasswords);
 

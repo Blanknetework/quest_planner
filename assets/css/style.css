@@ -86,7 +86,7 @@ body {
 
 /* Level banner */
 .level-banner {
-    background-color: var(--level-orange);
+    background-color: #FDB21C;
     border: 3px solid var(--border-brown);
     border-radius: 15px;
     color: white;
@@ -724,7 +724,7 @@ body {
 
 .icon-container {
     background-color: #3D2319;
-    border: 4px solid #2F1810;
+    border: 6px solid #5C2F22;
     border-radius: 12px;
     padding: 20px;
     display: flex;
@@ -816,7 +816,7 @@ body {
     font-size: 18px;
     font-weight: bold;
     text-transform: uppercase;
-    color: #5C2F22;
+    color: #ffffff;
     text-align: center;
     cursor: pointer;
     display: flex;
@@ -830,16 +830,16 @@ body {
 
 #addQuestBtn::before {
     content: '';
-    background-image: url('../images/add.png');
+    background-image: url('../images/6.svg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    width: 80px;
-    height: 80px;
+    width: 128px;
+    height: 128px;
     display: block;
     margin-bottom: 15px;
     position: relative;
-    top: -10px;
+    top: 10px;
 }
 
 #addQuestBtn:hover {

@@ -49,7 +49,7 @@ try {
         
         $facebook_id = $user->getId();
         $name = $user->getName();
-        $email = $user->getEmail(); // This might be null
+        $email = $user->getEmail(); 
 
         // Check if we got an email
         if (empty($email)) {
@@ -75,7 +75,7 @@ try {
             }
         }
 
-        // Continue with normal flow if email exists
+ 
         // Check if user exists
         $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? OR facebook_id = ?");
         $stmt->execute([$email, $facebook_id]);

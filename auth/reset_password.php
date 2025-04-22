@@ -22,9 +22,9 @@ $success = null;
 // Debug output
 error_log("Token received: " . $token);
 
-// Move this function outside, at the top level of the file
+
 function generateResetToken($email) {
-    global $pdo; // Change $conn to $pdo since you're using PDO
+    global $pdo; 
     
     // Generate token
     $reset_token = bin2hex(random_bytes(32));
@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['password'])) {
                     
                     $success = "Password has been reset successfully. You can now login with your new password.";
                     
-                    // Add JavaScript for notification and redirect
+                  
                     echo "<script>
                         window.onload = function() {
                             alert('Password reset successful! Redirecting to login page...');

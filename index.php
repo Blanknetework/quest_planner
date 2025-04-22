@@ -108,6 +108,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             // Update quest status in database
             $stmt = $pdo->prepare("UPDATE quests SET status = 'completed' WHERE id = ? AND user_id = ?");
             $stmt->execute([$questId, $_SESSION['user_id']]);
+
+            // Add notification for completed quest
+            $notification = [
+                'title' => 'Quest Completed!',
+                'message' => "You've completed the quest: " . $quest['name'] . " and earned " . $xpGain . " XP!"
+            ];
+            
+            // Initialize notifications array if it doesn't exist
+            if (!isset($_SESSION['notifications'])) {
+                $_SESSION['notifications'] = [];
+            }
+            
+            // Add notification to session
+            array_unshift($_SESSION['notifications'], $notification);
         }
     }
     
@@ -246,101 +260,225 @@ try {
         /* Ongoing Quests Styling */
         .ongoing-quests-container {
             margin-bottom: 20px;
+            margin-top: 30px;
             width: 279px;
         }
-        
-        .ongoing-quests-container .ongoing-quest-container {
-            background-color: #FFA346;
-            border: 4px solid #5C3D2E;
+
+        .ongoing-quest-header {
+            background: linear-gradient(90deg, #FFAA4B, #FF824E);
+            border: 7px solid #8A4B22;
             border-radius: 8px;
-            padding: 0px;
-            width: 100%;
-            height: 133px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+            border-bottom: none;
+            text-align: center;
+            padding: 6px 0;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            line-height: 1.2;
+            margin-bottom: -5px; 
+            width: 90%;
+            height: 82px;
+            font-size: 24px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
-        .ongoing-quests-container .ongoing-quest-header {
-            background-color: #FFA346;
+        .ongoing-quest-items-container {
+            border: 7px solid #FF9926;
+            background-color: #75341A;
+            border-radius: 13px;
+            padding: 16px;
+            min-height: 150px;
+        }
+
+        /* Timer Section Styling */
+        .timer-container {
+            margin-bottom: 20px;
+            margin-top: 30px;
+            width: 279px;
+        }
+
+        .timer-header {
+            background: linear-gradient(90deg, #FFAA4B, #FF824E);
+            border: 7px solid #8A4B22;
+            border-radius: 8px;
+            border-bottom: none;
+            text-align: center;
+            padding: 6px 0;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            line-height: 1.2;
+            margin-bottom: -5px; 
+            width: 90%;
+            font-size: 24px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .timer-box {
+            border: 7px solid #FF9926;
+            background-color: #75341A;
+            border-radius: 13px;
+            padding: 16px;
+        }
+
+        .timer-display {
+            font-size: 25px;
+            font-weight: bold;
             color: white;
             text-align: center;
-            font-weight: bold;
-            padding: 8px 0;
-            font-size: 16px;
-            text-transform: uppercase;
-            text-shadow: 1px 1px 0 #000;
-            letter-spacing: 1px;
-            font-family: 'KongText', monospace, system-ui;
-        }
-        
-        .ongoing-quests-container .ongoing-quest-items {
-            background-color: #F2D2A9; /* Lighter beige/tan color */
-            border-top: 4px solid #5C3D2E;
-            padding: 10px;
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            position: relative;
-        }
-        
-        /* Custom scrollbar for the quest items */
-        .ongoing-quests-container .ongoing-quest-items::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .ongoing-quests-container .ongoing-quest-items::-webkit-scrollbar-track {
-            background: #F2D2A9;
-        }
-        
-        .ongoing-quests-container .ongoing-quest-items::-webkit-scrollbar-thumb {
-            background-color: #5C3D2E;
-            border-radius: 4px;
-        }
-        
-        .ongoing-quests-container .ongoing-quest-item {
-            text-align: left;
             padding: 5px;
-            margin-bottom: 0;
+            margin-bottom: 15px;
         }
-        
-        .ongoing-quests-container .ongoing-quest-label {
-            font-family: 'KongText', monospace, system-ui;
-            font-size: 10px;
-            color: #5C3D2E;
-            text-transform: uppercase;
-            margin-bottom: 2px;
+
+        .timer-controls-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        
-        .ongoing-quests-container .ongoing-quest-title {
-            font-family: 'KongText', monospace, system-ui;
-            font-size: 14px;
-            color: #5C3D2E;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-            word-spacing: 3px;
-            text-transform: uppercase;
+
+        .timer-buttons {
+            background-color: #FFAA4B;
+            border: 5px solid #4D2422;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            width: 70%;
         }
-        
-        .ongoing-quests-container .ongoing-quest-info {
+
+        .timer-btn {
+            width: 25px;
+            height: 25px;
             display: flex;
             align-items: center;
-            font-family: 'KongText', monospace, system-ui;
-            font-size: 10px;
-            color: #5C3D2E;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+        }
+
+        .timer-btn img {
+            width: 27px;
+            height: 27px;
+        }
+
+        .timer-stop-btn {
+            width: 27px;
+            height: 27px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-stop-btn img {
+            max-width: none !important;
+        }
+
+        .timer-complete-btn {
+            width: 46px;
+            height: 46px;
+            background-color: #FFAA4B;
+            border: 5px solid #4D2422;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            color: #75341A;
+            font-size: 20px;
         }
         
-        .ongoing-quests-container .ongoing-difficulty-tag {
-            margin-right: 5px;
-            text-transform: uppercase;
+        /* Notifications Modal Styling */
+        .notifications-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s;
         }
         
-        .ongoing-quests-container .ongoing-difficulty-value {
-            color: #5C3D2E;
+        .notifications-modal.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .notifications-content {
+            width: 90%;
+            max-width: 800px;
+            background-color: #5C2E1B;
+            border: 7px solid #FF9926;
+            border-radius: 13px;
+            padding: 30px;
+            color: white;
+            max-height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .notifications-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .notification-icon-box {
+            width: 95px;
+            height: 70px;
+            background: linear-gradient(#FFAA4B, #FF824E);
+            border: 7px solid #8A4B22;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .notification-icon-box img {
+            width: 30px;
+            height: 30px;
+        }
+        
+        .notifications-header h2 {
+            font-size: 36px;
+            font-weight: bold;
             text-transform: uppercase;
+            letter-spacing: 2px;
+            color: white;
+            margin-bottom: 10px;
+            margin-left: 15px;
+        }
+        
+        .notification-item {
+            background-color: #8B4513;
+            border: 3px solid #FF9926;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .notification-title {
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #FFFFFF;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+        
+        .notification-message {
+            color: #FC8C1F;
+            font-size: 14px;
         }
 
     </style>
@@ -360,9 +498,12 @@ try {
                     <div class="user-profile-section">
                         <div class="profile-box"></div>
                         <div class="user-stats">
-                            <div class="username-banner px-4 py-1"><?php echo htmlspecialchars($username); ?></div>
-                            <div class="level-banner px-4 py-1">LvL <?php echo htmlspecialchars($level); ?></div>
-                            <div class="xp-banner px-4 py-1">XP <?php echo $currentXP; ?>/<?php echo $nextLevelXP; ?></div>
+                            <div class="username-banner px-4 py-1 w-[281px] h-[36px]"><?php echo htmlspecialchars($username); ?></div>
+                            <div class="level-banner px-4 py-1 w-[231px] h-[33px]">LvL <?php echo htmlspecialchars($level); ?></div>
+                            <div class="xp-banner px-4 py-1 w-[231px] h-[33px] relative bg-[#5C2F22]  overflow-hidden">
+                                <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-[#EA6242] to-[#EE8F50]" style="width: <?php echo ($currentXP / $nextLevelXP) * 100; ?>%;"></div>
+                                <div class="relative z-10 text-white font-bold">XP <?php echo $currentXP; ?>/<?php echo $nextLevelXP; ?></div>
+                            </div>
                             <div class="coin-display">
                                 <div class="coin-icon">C</div>
                                 <span class="font-bold text-sm">20 coins</span>
@@ -373,7 +514,7 @@ try {
                     <!-- Icon menu buttons -->
                     <div class="header-icons">
                         <div class="icon-container">
-                            <img src="../assets/images/4.svg" alt="Notifications" class="header-icon">
+                            <img src="../assets/images/4.svg" alt="Notifications" class="header-icon" id="notifications-btn">
                             <span class="icon-label">NOTIFS</span>
                 </div>
                         <div class="icon-container">
@@ -392,90 +533,128 @@ try {
             <div class="main-content">
                 <!-- Left Section - Menu and Controls -->
                 <div class="menu-section">
-                    <button class="menu-button mb-4" id="addQuestBtn">ADD QUEST</button>
-                    
-                    <!-- Difficulty Section - restyled to match the image -->
+                    <button class="menu-button mb-8" id="addQuestBtn">ADD QUEST</button>
+
+                    <!-- Ongoing Quest Section -->
                     <div class="ongoing-quests-container">
-                        <div class="ongoing-quest-container">
-                            <div class="ongoing-quest-header">ONGOING QUESTS</div>
-                            <div class="ongoing-quest-items">
+                        <div class="ongoing-quest-header">
+                            ONGOING<br>QUESTS
+                        </div>
+                        <!-- Main Ongoing Quest Box -->
+                        <div class="ongoing-quest-items-container">
+                            <?php if (empty($quests['inProgress'])): ?>
+                                <p class="text-center text-white text-sm">No quests in progress.</p>
+                            <?php else: ?>
                                 <?php foreach ($quests['inProgress'] as $quest): ?>
-                                <div class="ongoing-quest-item">
-                                    <div class="ongoing-quest-title"><?php echo strtoupper($quest['name']); ?></div>
-                                    <div class="ongoing-quest-info">
-                                        <div class="ongoing-difficulty-value"><?php echo $quest['difficulty']; ?></div>
+                                <div class="ongoing-quest-item p-3 text-white">
+                                    <div class="flex justify-between">
+                                        <span class="text-[13px]  font-bold uppercase">QUEST:</span>
+                                        <span></span> <!-- Spacer -->
+                                    </div>
+                                    <div class="text-center text-lg font-bold uppercase my-2">
+                                        <?php echo htmlspecialchars($quest['name']); ?>
+                                    </div>
+                                    <div class="flex justify-between items-end">
+                                        <span class="text-[13px] font-bold uppercase">DIFFICULTY:</span>
+                                        <span class="text-[13px] font-bold uppercase"><?php echo htmlspecialchars($quest['difficulty']); ?></span>
                                     </div>
                                 </div>
                                 <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    
+                    <!-- Timer Section -->
+                    <div class="timer-container">
+                        <div class="timer-header">
+                            TIMER
+                        </div>
+                        <div class="timer-box">
+                            <div class="timer-display" id="timer">00:00:00</div>
+                            <div class="timer-controls-container">
+                                <div class="timer-buttons">
+                                    <button class="timer-btn"><img src="../assets/images/triangle.png" alt="Play"></button>
+                                    <button class="timer-btn"><img src="../assets/images/pause.png" alt="Pause"></button>
+                                    <button class="timer-stop-btn"><img src="../assets/images/stop.png" alt="Stop"></button>
+                                </div>
+                                <button class="timer-complete-btn">✓</button>
                             </div>
                         </div>
                     </div>
-                
-                    <!-- Timer Section - with label on top of border -->
-                    <div class="category-container mb-4">
-                        <div class="category-header">TIMER</div>
-                        <div class="category-body pt-3">
-                            <div class="time-display" id="timer">00:00:00</div>
-                        </div>
-                    </div>
-                
+                                     
+                    
+
                 </div>
 
                 <!-- Right Section - Quest Areas -->
-                <div class="quests-section">
-                    
-                    
-                          
-                    <div class="quest-areas">
-                        <!-- Unfinished Quests -->
-                        <div class="quest-container">
-                            <div class="quest-header">UNFINISHED QUEST</div>
-                            <div class="quest-status">EDIT</div>
-                            <div class="quest-items-container">
-                    <?php foreach ($quests['unfinished'] as $quest): ?>
-                                <div class="quest-item" data-id="<?php echo $quest['id']; ?>">
-                                    <div class="flex justify-between">
-                                        <div>
-                                            <span class="difficulty-badge"><?php echo $quest['difficulty']; ?></span>
-                                            <span class="time-badge"><?php echo $quest['time']; ?></span>
+                <div class="quests-section grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-10">
+                    <!-- Unfinished Quests -->
+                    <div class="relative pt-6">
+                        <!-- Header positioned above -->
+                        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 z-5">
+                        <span class="inline-block px-20 py-1 bg-gradient-to-r from-[#FFAA4B] to-[#FF824E] border-4 border-[#8A4B22] rounded-md text-white font-bold uppercase text-sm whitespace-nowrap">
+                                Unfinished Quest
+                            </span>
+                        </div>
+                        <!-- Main Quest Box -->
+                        <div class="quest-container bg-[#75341A] border-[7px] border-[#D08C1F]  overflow-visible relative min-h-[200px]">
+                            <span class="quest-status absolute top-2 right-2  text-[#FFFFFF] text-[13px] font-bold px-2 py-1 rounded">EDIT</span>
+                            <div class="quest-items-container p-4 space-y-3">
+                                <?php foreach ($quests['unfinished'] as $quest): ?>
+                                <div class="quest-item bg-[#84503B]  p-3 mt-4 flex items-center justify-between shadow-[inset_0_0_0_2px_#84503B,inset_0_0_0_4px_#EBA977]" data-id="<?php echo $quest['id']; ?>">
+                                    <div class="flex-grow flex flex-col">
+                                        <div class="flex items-center space-x-1 mb-1"> <!-- Badges Row -->
+                                            <span class="difficulty-badge  text-white text-xs px-2 py-0.5 rounded"><?php echo strtoupper($quest['difficulty']); ?></span>
+                                            <span class="time-badge  text-white text-xs px-2 py-0.5 rounded"><?php echo $quest['time']; ?></span>
                                         </div>
-                                        <div class="action-buttons">
-                                            <button class="action-btn action-btn-delete delete-quest" data-id="<?php echo $quest['id']; ?>">✕</button>
-                                            <button class="action-btn action-btn-complete start-quest" data-id="<?php echo $quest['id']; ?>">▶</button>
+                                        <div class="flex items-center space-x-2"> <!-- Icons + Text Row -->
+                                            <div class="icon-placeholder w-5 h-5 bg-[#D4AF88] border-2 border-[#4D2422] rounded-full flex items-center justify-center text-[#4D2422] font-bold text-xs">✓</div>
+                                            <div class="icon-placeholder w-5 h-5 bg-[#D4AF88] border-2 border-[#4D2422] rounded-full flex items-center justify-center text-[#4D2422] font-bold text-xs">▶</div>
+                                            <span class="text-sm font-bold text-[#FFFFFF] uppercase"><?php echo $quest['name']; ?></span>
                                         </div>
                                     </div>
-                                    <div class="quest-content">
-                                        <div class="checkbox-circle"></div>
-                                        <span class="text-sm font-bold"><?php echo $quest['name']; ?></span>
+                                    <div class="action-buttons flex space-x-1">
+                                        <button class="action-btn action-btn-delete delete-quest w-6 h-6 flex items-center justify-center bg-[#FF4B4B] text-white rounded border border-[#4D2422]" data-id="<?php echo $quest['id']; ?>">✕</button>
+                                        <button class="action-btn action-btn-start start-quest w-6 h-6 flex items-center justify-center bg-[#4BFF4B] text-white rounded border border-[#4D2422]" data-id="<?php echo $quest['id']; ?>">▶</button>
                                     </div>
                                 </div>
                                 <?php endforeach; ?>
                             </div>
                         </div>
+                    </div>
 
                     <!-- In Progress Quests -->
-                    <div class="quest-container">
-                        <div class="quest-header">IN PROGRESS QUEST</div>
-                        <div class="quest-status">DONE</div>
-                        <div class="quest-items-container">
-                            <?php foreach ($quests['inProgress'] as $quest): ?>
-                            <div class="quest-item" data-id="<?php echo $quest['id']; ?>">
-                                <div class="flex justify-between">
-                                    <div>
-                                        <span class="difficulty-badge"><?php echo $quest['difficulty']; ?></span>
-                                        <span class="time-badge"><?php echo $quest['time']; ?></span>
-                </div>
-                                    <div class="action-buttons">
-                                        <button class="action-btn action-btn-delete delete-quest" data-id="<?php echo $quest['id']; ?>">✕</button>
-                                        <button class="action-btn action-btn-complete complete-quest" data-id="<?php echo $quest['id']; ?>">✓</button>
-            </div>
-        </div>
-                                <div class="quest-content">
-                                    <div class="checkbox-circle"></div>
-                                    <span class="text-sm font-bold"><?php echo $quest['name']; ?></span>
+                    <div class="relative pt-6">
+                         <!-- Header positioned above -->
+                        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 z-5">
+                             <span class="inline-block px-20 py-1 bg-gradient-to-r from-[#FFAA4B] to-[#FF824E] border-4 border-[#8A4B22] rounded-md text-white font-bold uppercase text-sm whitespace-nowrap">
+                                In Progress Quest
+                            </span>
+                        </div>
+                         <!-- Main Quest Box -->
+                        <div class="quest-container bg-[#75341A] border-[7px] border-[#D08C1F] rounded-lg overflow-visible relative min-h-[200px]">
+                            <span class="quest-status absolute top-2 right-2  text-[#FFFFFF] text-[13px] font-bold px-2 py-1 rounded">DONE</span>
+                            <div class="quest-items-container p-4 space-y-3">
+                                <?php foreach ($quests['inProgress'] as $quest): ?>
+                                <div class="quest-item bg-[#A67B5B] rounded-lg p-3 mt-4 flex items-center justify-between shadow-[inset_0_0_0_2px_#84503B,inset_0_0_0_4px_#EBA977]" data-id="<?php echo $quest['id']; ?>">
+                                     <div class="flex-grow flex flex-col">
+                                        <div class="flex items-center space-x-1 mb-1"> <!-- Badges Row -->
+                                            <span class="difficulty-badge bg-[#4D2422] text-white text-xs px-2 py-0.5 rounded"><?php echo strtoupper($quest['difficulty']); ?></span>
+                                            <span class="time-badge bg-[#4D2422] text-white text-xs px-2 py-0.5 rounded"><?php echo $quest['time']; ?></span>
+                                        </div>
+                                        <div class="flex items-center space-x-2"> <!-- Icons + Text Row -->
+                                            <div class="icon-placeholder w-5 h-5 bg-[#D4AF88] border-2 border-[#4D2422] rounded-full flex items-center justify-center text-[#4D2422] font-bold text-xs">✓</div>
+                                            <div class="icon-placeholder w-5 h-5 bg-[#D4AF88] border-2 border-[#4D2422] rounded-full flex items-center justify-center text-[#4D2422] font-bold text-xs">▶</div> 
+                                            <span class="text-sm font-bold text-[#4D2422] uppercase"><?php echo $quest['name']; ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="action-buttons flex space-x-1">
+                                        <button class="action-btn action-btn-delete delete-quest w-6 h-6 flex items-center justify-center bg-[#FF4B4B] text-white rounded border border-[#4D2422]" data-id="<?php echo $quest['id']; ?>">✕</button>
+                                        <button class="action-btn action-btn-complete complete-quest w-6 h-6 flex items-center justify-center bg-[#FF9C4B] text-white rounded border border-[#4D2422]" data-id="<?php echo $quest['id']; ?>">✓</button>
+                                    </div>
                                 </div>
+                                <?php endforeach; ?>
                             </div>
-                            <?php endforeach; ?>
                         </div>
                     </div>
                 </div>
@@ -485,77 +664,151 @@ try {
 
     <!-- Add Quest Modal -->
     <div id="addQuestModal" class="quest-modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>ADD NEW QUEST</h3>
-                <button id="closeModal" class="close-button">✕</button>
+        <div class="modal-content bg-[#75341A] border-4 border-[#FFAA4B] rounded-lg p-8">
+            <div class="modal-header flex justify-between items-center mb-6">
+                <button id="closeModal" class="close-button text-white hover:text-[#FFAA4B]">✕</button>
             </div>
             <form id="questForm" method="POST" action="index.php">
                 <input type="hidden" name="action" value="add_quest">
-                <div class="quest-form-container">
+                <div class="quest-form-container space-y-6">
                     <!-- Quest Name Section -->
-                    <div class="quest-input-section">
-                        <div class="quest-label">QUEST NAME</div>
-                        <div class="quest-input-box">
-                            <input type="text" id="quest_name" name="quest_name" required>
-                        </div>
+                    <div class="relative quest-input-section">
+                        <label for="quest_name" class="absolute left-1/2 transform -translate-x-1/2 top-2 text-[#FFFFFF] text-xs uppercase tracking-wider">QUEST NAME</label>
+                        <input type="text" id="quest_name" name="quest_name" required
+                            class="w-full pt-7 pb-2 px-4 bg-[#4D2422] border-2 border-[#FFAA4B] rounded text-white text-center">
                     </div>
 
                     <!-- Choose/Input Quest Section -->
                     <div class="quest-input-section">
-                        <div class="quest-label">Choose/Input Quest</div>
-                        <div class="quest-input-box">
-                            <input type="text" id="quest_input" name="quest_input" >
-                        </div>
+                        <div class="text-[#FFD700] mb-2 uppercase text-sm text-center">Choose/Input quest</div>
+                        <input type="text" id="quest_input" name="quest_input" required
+                            class="w-full px-4 py-3 bg-[#4D2422] border-2 border-[#FFAA4B] rounded text-white text-center">
                     </div>
 
                     <!-- Quest Difficulty Section -->
                     <div class="quest-input-section">
-                        <div class="quest-label">Quest Difficulty</div>
-                        <div class="quest-input-box difficulty-select">
-                            <select name="difficulty" id="difficulty" required>
-                                <option value="Easy">Easy</option>
-                                <option value="Medium">Medium</option>
-                                <option value="Hard">Hard</option>
-                            </select>
-                        </div>
-                        <div class="difficulty-tooltip">
-                            After adding quest, choose quest difficulty.
-                            <br>NOTE: There are preset quests for each difficulty. Specific quest are rewarded with fixed XP
-                        </div>
+                        <div class="text-[#FFD700] mb-2 uppercase text-sm text-center">Quest difficulty</div>
+                        <select name="difficulty" id="difficulty" required
+                            class="w-full px-4 py-3 bg-[#4D2422] border-2 border-[#FFAA4B] rounded text-white appearance-none text-center">
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
                     </div>
 
                     <!-- Quest Date/Time Section -->
-                    <div class="quest-datetime-container">
+                    <div class="grid grid-cols-3 gap-4">
                         <div class="quest-date-section">
-                            <div class="quest-label">Set Quest Date</div>
-                            <div class="quest-input-box">
-                                <input type="text" id="quest_date" name="quest_date" placeholder="00/00/00">
-                            </div>
+                            <div class="text-[#FFD700] mb-2 uppercase text-sm text-center">Set Quest Date</div>
+                            <input type="text" id="quest_date" name="quest_date" value="04/03/25"
+                                class="w-full px-4 py-3 bg-[#4D2422] border-2 border-[#FFAA4B] rounded text-white text-center placeholder-gray-400">
                         </div>
 
                         <div class="quest-time-section">
-                            <div class="quest-label">Set Quest Time</div>
-                            <div class="quest-input-box">
-                                <input type="text" id="quest_time" name="quest_time" placeholder="00:00 PM">
-                            </div>
+                            <div class="text-[#FFD700] mb-2 uppercase text-sm text-center">Set Quest Time</div>
+                            <input type="text" id="quest_time" name="quest_time" value="10:30 PM"
+                                class="w-full px-4 py-3 bg-[#4D2422] border-2 border-[#FFAA4B] rounded text-white text-center placeholder-gray-400">
                         </div>
 
                         <div class="quest-timer-section">
-                            <div class="quest-label">Set Quest Timer</div>
-                            <div class="quest-input-box">
-                                <input type="text" id="time" name="time" placeholder="00:00:00" required>
-                            </div>
+                            <div class="text-[#FFD700] mb-2 uppercase text-sm text-center">Set Quest Timer</div>
+                            <input type="text" id="time" name="time" value="00:00:00" required
+                                class="w-full px-4 py-3 bg-[#4D2422] border-2 border-[#FFAA4B] rounded text-white text-center placeholder-gray-400">
                         </div>
                     </div>
 
-                    <button type="submit" class="submit-btn">ADD QUEST</button>
+                    <button type="submit" class="w-full py-3 bg-[#FFAA4B] text-white font-bold uppercase rounded border-2 border-[#4D2422] hover:bg-[#FF9C4B] transition-colors mt-6">
+                        ADD QUEST
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Notifications Modal -->
+    <div id="notificationsModal" class="notifications-modal">
+        <div class="notifications-content">
+            <div class="notifications-header">
+                <div class="notification-icon-box" id="notifications-back-btn" style="cursor: pointer;">
+                    <img src="../assets/images/arrow-left.png" alt="Back">
+                </div>
+                <h2>Notifications</h2>
+            </div>
+            
+            <div id="notifications-container">
+                <?php if (isset($_SESSION['notifications']) && !empty($_SESSION['notifications'])): ?>
+                    <?php foreach ($_SESSION['notifications'] as $notification): ?>
+                        <div class="notification-item">
+                            <div class="notification-title"><?php echo htmlspecialchars($notification['title']); ?></div>
+                            <div class="notification-message"><?php echo htmlspecialchars($notification['message']); ?></div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="text-center text-white py-10">No notifications yet</div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
 <script>
+        // Notifications Modal
+        document.getElementById('notifications-btn').addEventListener('click', function() {
+            document.getElementById('notificationsModal').classList.add('show');
+        });
+        
+        // Close the notifications modal when clicking the back button
+        document.getElementById('notifications-back-btn').addEventListener('click', function() {
+            document.getElementById('notificationsModal').classList.remove('show');
+        });
+        
+        // Close the notifications modal when clicking outside of it
+        document.getElementById('notificationsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+            }
+        });
+
+        // Function to add a notification
+        function addNotification(title, message) {
+            const container = document.getElementById('notifications-container');
+            const emptyNotice = container.querySelector('.text-center');
+            
+            // Remove the "No notifications yet" message if it exists
+            if (emptyNotice) {
+                emptyNotice.remove();
+            }
+            
+            // Create notification item
+            const notificationItem = document.createElement('div');
+            notificationItem.className = 'notification-item';
+            
+            // Create title
+            const notificationTitle = document.createElement('div');
+            notificationTitle.className = 'notification-title';
+            notificationTitle.textContent = title;
+            
+            // Create message
+            const notificationMessage = document.createElement('div');
+            notificationMessage.className = 'notification-message';
+            notificationMessage.textContent = message;
+            
+            // Add elements to notification item
+            notificationItem.appendChild(notificationTitle);
+            notificationItem.appendChild(notificationMessage);
+            
+            // Add notification to container
+            container.prepend(notificationItem); // Add at the top
+            
+            // Also send to server to save in session
+            fetch('save_notification.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'title=' + encodeURIComponent(title) + '&message=' + encodeURIComponent(message)
+            });
+        }
+
         // Inline debugging script
         document.getElementById('addQuestBtn').addEventListener('click', function() {
             console.log('Add Quest button clicked (inline)');

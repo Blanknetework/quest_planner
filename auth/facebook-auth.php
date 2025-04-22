@@ -19,7 +19,6 @@ $fb = new Facebook([
 
 $helper = $fb->getRedirectLoginHelper();
 
-// Adding state parameter for security
 $_SESSION['FBRLH_state'] = bin2hex(random_bytes(32));
 
 $permissions = ['email', 'public_profile'];
@@ -28,6 +27,6 @@ $loginUrl = $helper->getLoginUrl(
     $permissions
 );
 
-// Redirect to Facebook login page
+
 header('Location: ' . filter_var($loginUrl, FILTER_SANITIZE_URL));
 exit;

@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const isVerified = row.cells[3].textContent.trim() === 'Verified';
             document.getElementById('edit_status').value = isVerified ? '1' : '0';
             
-            // Show modal
+         
             editModal.classList.remove('hidden');
         });
     });
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Close modal when clicking outside
+    
     if (editModal) {
         editModal.addEventListener('click', function(e) {
             if (e.target === editModal) {
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Close modal and reload page to show changes
+                    
                     editModal.classList.add('hidden');
                     window.location.reload();
                 } else {
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
         logoutLink.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Show the modal
+            
             document.getElementById('logoutModal').classList.remove('hidden');
         });
     }
@@ -142,35 +142,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function showDeleteModal(userId) {
-    // Set the user ID in the hidden form field
+
     document.getElementById('delete_user_id').value = userId;
     
-    // Show the modal
+
     var modal = document.getElementById('deleteModal');
     modal.classList.remove('hidden');
     modal.classList.add('show');
 }
 
-// When the page loads
 document.addEventListener('DOMContentLoaded', function() {
-    // Get modal elements
+
     var deleteModal = document.getElementById('deleteModal');
     var closeButton = document.getElementById('closeDeleteModal');
     var cancelButton = document.getElementById('cancelDelete');
     
-    // Close modal when X is clicked
+
     closeButton.onclick = function() {
         deleteModal.classList.remove('show');
         deleteModal.classList.add('hidden');
     }
     
-    // Close modal when Cancel is clicked
+
     cancelButton.onclick = function() {
         deleteModal.classList.remove('show');
         deleteModal.classList.add('hidden');
     }
     
-    // Close modal when clicking outside
+
     window.onclick = function(event) {
         if (event.target == deleteModal) {
             deleteModal.classList.remove('show');
