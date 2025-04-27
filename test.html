@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="login.css">
+  <!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+    <style>
+        @font-face {
+    font-family: 'broken';
+    src: url('assets/fonts/kongtext/kongtext.ttf');
+}
+
+body {
+    background: url('assets/images/bggg.jpg') no-repeat center center fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    height: 100vh;
+}
+.title-box {
+    background: linear-gradient(90deg,#FFAA4B,#FF824E);
+    border: 7px solid #8A4B22;
+    width: 550px;
+    height: 50px;
+    padding: 0.5rem 1rem;
+    display: inline-block;
+    text-align: center;
+    margin-bottom: -30px;
+    -webkit-text-stroke: #75341A 1px;
+    z-index: 1;
+}
+.title-box h1 {
+    color: white;
+    font-family: 'broken';
+    font-size: 25px;
+}
+
+.mainbox{
+    width: 621px;
+    height: 634px;
+    background-color: #75341A;
+    border-radius: 13px;
+    border: #FF9926 5px solid;
+    padding: 20px 10px 10px 10px;
+}
+
+.login-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+.login-form label{
+    font-family: 'broken';
+    color: white;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    align-self: flex-start;
+    margin-left: 45px;
+}
+
+.login-form input{
+    width: 515px;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    font-family: 'broken';
+    background-color: #FFEAE4;
+    border: #FDB21C 5px solid;
+    border-radius: 13px;
+}
+
+.login-form a{
+    align-self: flex-start;
+    margin-left: 45px;
+    font-family: 'broken';
+    font-size: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #FFEAE4;
+}
+
+.login-form button{
+    width: 400px;
+    height: 50px;
+    border-radius: 13px;
+    border: #8A4B22 5px solid;
+    background: linear-gradient(90deg,#FFAA4B,#FF824E);
+
+    font-family: 'broken';
+    font-size: 15px;
+    color: #FFEAE4;
+    margin-bottom: 10px;
+}
+
+.login-form p{
+    color: #FFEAE4;
+    font-family: 'broken';
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-left: -50px;
+  }
+  
+  .social-icon-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    text-decoration: none;
+    color: white;
+    font-size: 50px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+  
+  .social-icon-btn:hover {
+    transform: scale(1.1);
+  }
+  
+  .google-btn {
+    background-color: #db4437;
+  }
+  
+  .facebook-btn {
+    background-color: #3b5998;
+  }
+  
+
+
+  
+    </style>
+
+
+  <div class="title-box">
+      <h1>Log in to your account</h1>
+  </div>
+
+  <div class="mainbox">
+    <form class="login-form" action="/login" method="POST">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+  
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+      
+      <a href="fpw.html">Forgot Password?</a>
+
+      <button type="submit">Login</button>
+
+      <a href="regist">New adventurer? Register</a>
+
+      <p>------------------or------------------</p>
+      <div class="social-buttons">
+        <a href="https://accounts.google.com/signin" class="social-icon-btn google-btn">
+          <i class="fab fa-google"></i>
+        </a>
+        <a href="https://www.facebook.com/login" class="social-icon-btn facebook-btn">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </div>
+      
+    </form>
+  </div>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

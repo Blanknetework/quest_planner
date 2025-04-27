@@ -520,11 +520,12 @@ try {
                         <div class="icon-container">
                             <img src="../assets/images/5.svg" alt="Guild" class="header-icon">
                             <span class="icon-label">GUILD</span>
-            </div>
+                        </div>
                         <div class="icon-container">
-                            <img src="../assets/images/3.svg" alt="Settings" class="header-icon">
-                            <span class="icon-label">SETTINGS</span>
-                </div>
+                        <img src="../assets/images/3.svg" alt="Settings" class="header-icon" onclick="location.href='pages/settings.php'" style="cursor: pointer;">
+                        <span class="icon-label">SETTINGS</span>
+                    </div>
+
                 </div>
             </div>
         </header>
