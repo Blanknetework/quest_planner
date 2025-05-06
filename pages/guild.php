@@ -50,119 +50,123 @@ for ($i = 1; $i < $level; $i++) {
             min-height: 100vh;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
         }
         
         .menu-button {
-            background: linear-gradient(90deg, #FFAA4B, #FF824E);
-            border: 5px solid #8A4B22;
-            border-radius: 10px;
+            border: 8px solid #8A4B22;
+            border-radius: 12px;
             color: white;
             font-weight: bold;
             text-transform: uppercase;
-            padding: 12px 30px;
-            width: 80%;
-            margin: 10px auto;
-            display: block;
+            padding: 25px 30px;
+            width: 360px;
+            max-width: 100%;
+            height: 80px;
+            margin: 12px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 28px;
             transition: all 0.2s;
+            text-align: center;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         
         .menu-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
         }
         
         .menu-button-shop {
-            background: #FCA016;
+            background: linear-gradient(to bottom, #FB8020, #FEBB1C, #874325);
         }
         
         .menu-button-achievements {
-            background: #1FCE76;
+            background: linear-gradient(to bottom, #2FDD63, #0D824F, #04EE81);
         }
         
         .menu-button-xp {
-            background: #1FADCE;
+            background: linear-gradient(to bottom, #2FCEDD, #1A87B3, #04C9EE);
         }
         
-        .speech-bubble {
-            background-color: #75341A;
-            border: 5px solid #FF9926;
-            border-radius: 15px;
-            padding: 15px;
-            position: relative;
-            color: white;
-            margin-bottom: 30px;
+        .gradient-orange {
+            background: linear-gradient(to bottom, #FC8C1F, #FDB21C, #DDB21F);
         }
         
-        .speech-bubble:after {
-            content: '';
-            position: absolute;
-            bottom: -25px;
-            left: 50px;
-            border-width: 20px 15px 0;
-            border-style: solid;
-            border-color: #FF9926 transparent;
+        .gradient-button {
+            background: linear-gradient(90deg, #FFAA4B, #FF824E);
         }
         
-        .speech-bubble:before {
-            content: '';
-            position: absolute;
-            bottom: -18px;
-            left: 52px;
-            border-width: 18px 13px 0;
-            border-style: solid;
-            border-color: #75341A transparent;
+        
+        
+    
+      
+        
+        .footer-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
             z-index: 1;
         }
-    </style>
-</head>
-<body class="flex flex-col min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-        <!-- Back Button -->
-        <a href="../index.php" class="absolute top-5 left-5 w-14 h-12 bg-gradient-to-r from-orange-light to-orange-dark border-[5px] border-brown-dark rounded-md flex items-center justify-center cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-        </a>
         
-        <!-- Main Content -->
-        <div class="flex flex-col items-center mt-10">
-            <!-- Speech Bubble -->
-            <div class="speech-bubble max-w-lg text-center mb-8">
-                <p class="text-xl">Welcome to the Guild, <?php echo htmlspecialchars($username); ?>! I'm the shopkeeper. What can I help you with today?</p>
-            </div>
-            
-            <!-- Shopkeeper Image -->
-            <div class="mb-8">
-                <img src="../assets/images/shopkeeper.png" alt="Shopkeeper" class="max-w-xs mx-auto">
-            </div>
-            
-            <!-- Menu Buttons -->
-            <div class="w-full max-w-md space-y-4 mt-4">
-                <a href="#" class="menu-button menu-button-shop">
-                    SHOP
-                </a>
-                
-                <a href="#" class="menu-button menu-button-achievements">
-                    ACHIEVEMENTS
-                </a>
-                
-                <a href="#" class="menu-button menu-button-xp">
-                    XP PROGRESS
-                </a>
-            </div>
-            
-            <!-- User Info -->
-            <div class="mt-8 text-center text-white">
-                <p class="text-xl mb-2"><?php echo htmlspecialchars($username); ?></p>
-                <p class="text-lg">Level: <?php echo htmlspecialchars($level); ?></p>
-                <div class="w-64 h-4 bg-gray-700 rounded-full mt-2 overflow-hidden">
-                    <div class="h-full bg-gradient-to-r from-[#EA6242] to-[#EE8F50]" style="width: <?php echo ($currentXP / $nextLevelXP) * 100; ?>%"></div>
-                </div>
-                <p class="text-sm mt-1">XP: <?php echo $currentXP; ?>/<?php echo $nextLevelXP; ?></p>
-            </div>
-        </div>
+        .footer-container img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-bottom: 60px; /* Add space for the footer */
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brown: {
+                            DEFAULT: '#75341A',
+                            dark: '#8A4B22'
+                        },
+                        orange: {
+                            DEFAULT: '#FF9926',
+                            light: '#FFAA4B',
+                            dark: '#FF824E'
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body>
+    <!-- Back Button -->
+    <a href="../index.php" class="absolute top-5 left-12 md:left-20 w-16 h-14 gradient-button border-[5px] border-brown-dark rounded-md flex items-center justify-center cursor-pointer">
+        <img src="../assets/images/arrow-left.png" alt="Back" class="w-6 h-6">
+    </a>
+    
+    <!-- Guild Title -->
+    <div class="absolute top-5 left-32 md:left-[200px] w-64 md:w-72 h-14 gradient-orange border-[8px] border-brown-dark rounded-lg flex items-center justify-center">
+        <h1 class="text-white text-sm uppercase">GUILD</h1>
     </div>
+    
+    <div class="container mx-auto px-4 pt-24 main-content relative flex flex-col items-center justify-end" style="min-height: 80vh;">
+        <!-- Shopkeeper and Welcome Text Over Footer -->
+        <div class="absolute left-1/4 -translate-x-3/4 bottom-[102px] flex flex-col items-center ">
+            <img src="../assets/images/shopkeeper.png" alt="Shopkeeper" class="w-[450px] h-auto">
+        </div>
+     
+    
+    <!-- Footer with Rectangle.png -->
+    <div class="footer-container">
+        <img src="../assets/images/Rectangle.png" alt="Footer Background">
+    </div>  
 </body>
 </html>
