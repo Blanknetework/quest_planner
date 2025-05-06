@@ -114,7 +114,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -122,190 +121,152 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forgot Password - Quest Planner</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../assets/css/style.css">
     <style>
         @font-face {
             font-family: 'KongText';
-            src: url('assets/fonts/kongtext/kongtext.ttf') format('truetype');
+            src: url('../assets/fonts/kongtext/kongtext.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
         
-        :root {
-            --pixel-font: 'KongText', 'Courier New', monospace, system-ui;
-        }
-        
-        .game-container {
+        body {
             background-image: url('../assets/images/bggg.jpg');
             background-size: cover;
+            background-position: center;
             background-attachment: fixed;
             min-height: 100vh;
-            overflow-x: hidden;
-            padding: 20px;
+            font-family: 'KongText', monospace;
+            overflow: hidden;
         }
-
-        .auth-form {
-            background-color: var(--quest-box-tan);
-            border: 4px solid var(--border-brown);
-            border-radius: 0; /* Square corners for pixel look */
-            padding: 20px;
-            max-width: 400px;
-            margin: 0 auto;
-            margin-top: 50px;
-        }
-
-        .auth-header {
-            background-color: var(--button-orange);
-            color: #FFFFFF;
-            font-weight: bold;
-            text-align: center;
-            padding: 10px 0;
-            margin: -20px -20px 20px -20px;
-            border-bottom: 4px solid var(--border-brown);
-            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
+        
         .auth-input {
+            background-color: #FFEAE4;
+            border: 5px solid #FDB21C;
+            border-radius: 13px;
+            padding: 8px 12px;
             width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 3px solid var(--border-brown);
-            border-radius: 0; /* Square corners for pixel look */
-            background-color: #FFF;
-            font-family: var(--pixel-font);
-            font-size: 12px;
-            color: var(--dark-text);
+            font-family: 'KongText', monospace;
         }
-
+        
+        .title-gradient {
+            background: linear-gradient(90deg, #FFAA4B, #FF824E);
+        }
+        
         .auth-button {
-            background-color: var(--button-orange);
+            background: linear-gradient(90deg, #FFAA4B, #FF824E);
+            border: 5px solid #8A4B22;
+            border-radius: 13px;
             color: white;
-            border: 3px solid var(--border-brown);
-            border-radius: 0; /* Square corners for pixel look */
-            padding: 8px 15px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            font-family: var(--pixel-font);
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            font-family: 'KongText', monospace;
+            padding: 10px 20px;
+            transition: all 0.2s;
         }
-
+        
         .auth-button:hover {
-            opacity: 0.9;
-        }
-
-        .auth-link {
-            color: var(--dark-text);
-            text-decoration: none;
-            font-size: 12px;
-            display: block;
-            margin-top: 15px;
-            text-align: center;
-        }
-
-        .title-banner {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            margin-bottom: 20px;
-            padding: 10px;
-        }
-
-        .title-box {
-            width: 56px;
-            height: 50px;
-            background-color: #4D2422;
-            border-radius: 10px;
-            flex-shrink: 0;
-            margin-right: 15px;
-        }
-
-        .title-image {
-            max-width: 250px;
-            height: auto;
-            align-items: center;
-            justify-content: center;
-            margin-top: 10px;
-        }
-
-        .auth-link:hover {
-            text-decoration: underline;
+            transform: translateY(-2px);
         }
         
-        .auth-description {
-            color: var(--dark-text);
-            font-size: 12px;
-            margin-bottom: 15px;
-            text-align: center;
+        .particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float-up 15s linear infinite;
         }
         
-        .message-box {
-            background-color: var(--medium-brown);
-            border: 3px solid var(--border-brown);
-            border-radius: 0;
-            padding: 10px;
-            margin-bottom: 15px;
-            color: var(--dark-text);
-            font-size: 12px;
-            text-align: center;
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(var(--tx));
+                opacity: 0;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="game-container">
-        <div class="container mx-auto px-4 py-4">
-            <!-- Title Banner -->               
-             <div class="title-banner">
-                <div class="title-box"></div>
-                <img src="../assets/images/Quest-Planner.png" alt="QUEST PLANNER" class="title-image">
+<body class="flex flex-col items-center justify-center m-0 h-screen">
+    <div class="particles" id="particles"></div>
+    
+    <!-- Title Box -->
+    <div class="title-gradient border-[7px] border-[#8A4B22] w-[350px] md:w-[450px] py-2 px-4 text-center mb-[-25px] z-10 relative flex items-center justify-center">
+        <h1 class="text-white text-[16px] font-bold">FORGOT PASSWORD</h1>
+    </div>
+    
+    <!-- Main Box -->
+    <div class="bg-[#75341A] border-[5px] border-[#FF9926] rounded-[13px] w-[320px] md:w-[600px] p-6 pt-10 z-0 relative">
+        <?php if($success): ?>
+            <div class="bg-green-500 text-white p-4 mb-4 rounded-lg text-center text-xs">
+                <?php echo htmlspecialchars($success); ?>
+            </div>
+        <?php endif; ?>
+        
+        <?php if($error): ?>
+            <div class="bg-red-500 text-white p-2 mb-4 rounded text-center text-xs">
+                <?php echo htmlspecialchars($error); ?>
+            </div>
+        <?php endif; ?>
+        
+        <div class="text-white text-center mb-6 text-sm">
+            Enter your email address below, and we'll send you a link to reset your password.
+        </div>
+        
+        <form method="POST" action="forgot_password.php" class="flex flex-col items-center">
+            <div class="w-full mb-4">
+                <label for="email" class="text-white block mb-2 text-sm">Email</label>
+                <input type="email" name="email" id="email" class="auth-input" required>
             </div>
             
-            <!-- Forgot Password Form -->
-            <div class="auth-form">
-                <div class="auth-header">FORGOT PASSWORD</div>
-                
-                <p class="auth-description">ENTER YOUR EMAIL ADDRESS AND WE'LL SEND YOU A LINK TO RESET YOUR PASSWORD.</p>
-                
-                <?php if($error): ?>
-                    <div class="bg-red-100 border-2 border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                        <?php echo htmlspecialchars($error); ?>
-                    </div>
-                <?php endif; ?>
-                
-                <?php if($success): ?>
-                    <div class="bg-green-100 border-2 border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                        <?php echo htmlspecialchars($success); ?>
-                        <p class="mt-4 text-center">
-                            <a href="login.php" 
-                               class="inline-block bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-colors">
-                                Go to Login
-                            </a>
-                        </p>
-                    </div>
-                <?php else: ?>
-                <form method="POST" action="forgot_password.php">
-                    <input type="email" name="email" class="auth-input" placeholder="EMAIL" required>
-                    <button type="submit" class="auth-button">SEND RESET LINK</button>
-                </form>
-                <?php endif; ?>
-
-                <a href="login.php" class="auth-link">BACK TO LOGIN</a>
+            <button type="submit" class="auth-button w-[80%] py-2 mb-3">Send Reset Link</button>
+            
+            <div class="mt-4 text-center">
+                <a href="login.php" class="text-[#FFEAE4] text-xs hover:underline">Return to login</a>
             </div>
-        </div>
+        </form>
     </div>
     
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const successMessage = document.getElementById('successMessage');
-            if (successMessage) {
-                successMessage.classList.remove('hidden');
-            }
-        });
+        // Create floating particles effect
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 30;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle', 'animate-float-up');
+            
+            // Random position
+            const posX = Math.random() * 100;
+            const posY = Math.random() * 100;
+            const size = 3 + Math.random() * 5;
+            const delay = Math.random() * 5;
+            const translateX = -100 + Math.random() * 200;
+            
+            particle.style.left = `${posX}%`;
+            particle.style.bottom = `${posY}%`;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.animationDelay = `${delay}s`;
+            particle.style.setProperty('--tx', `${translateX}px`);
+            
+            particlesContainer.appendChild(particle);
+        }
     </script>
 </body>
 </html>

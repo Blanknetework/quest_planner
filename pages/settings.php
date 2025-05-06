@@ -119,7 +119,7 @@ function sendPasswordChangeEmail($email, $username) {
 }
 
 // Get user data
-$stmt = $pdo->prepare("SELECT username, email FROM users WHERE id = ?");
+$stmt = $pdo->prepare("SELECT username, email, full_name, gender, date_of_birth FROM users WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 
@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         if (!empty($dob)) {
-            $updateFields[] = "dob = ?";
+            $updateFields[] = "date_of_birth = ?";
             $params[] = $dob;
         }
         
@@ -209,8 +209,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
             
-            // Refresh user data
-            header('Location: settings.php?success=profile');
+            // Refresh user data without the success parameter
+            header('Location: settings.php');
             exit;
         }
     }
@@ -251,37 +251,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background: linear-gradient(90deg, #FF6B6B, #FF4B4B);
         }
         
-        /* Notification styles */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 8px;
+        /* Success message */
+        .success-message {
+            display: none;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            padding: 10px;
             color: white;
-            font-family: 'kongtext', monospace;
-            font-size: 14px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: opacity 0.3s, transform 0.3s;
-            max-width: 350px;
-        }
-        
-        .notification.success {
-            background: linear-gradient(90deg, #4CAF50, #2E7D32);
-            border: 3px solid #1B5E20;
-        }
-        
-        .notification.error {
-            background: linear-gradient(90deg, #F44336, #C62828);
-            border: 3px solid #B71C1C;
-        }
-        
-        .notification.show {
-            opacity: 1;
-            transform: translateY(0);
+            margin-bottom: 15px;
+            text-align: center;
         }
         
         /* Password modal styles */
@@ -324,6 +302,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #000000 !important;
             background-color: white !important;
         }
+        
+        .modal-input[type="password"] {
+            font-family: Arial, sans-serif !important;
+            font-size: 16px !important;
+            color: #000000 !important;
+            background-color: white !important;
+        }
+        
+        /* Logout modal styles */
+        .logout-modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+        }
+        
+        .logout-modal-content {
+            background-color: #75341A;
+            border: 5px solid #FF9926;
+            border-radius: 13px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            margin: 15% auto;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .logout-title {
+            background: linear-gradient(90deg, #FFAA4B, #FF824E);
+            border: 5px solid #8A4B22;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            margin: -45px auto 20px;
+            width: 80%;
+            color: white;
+        }
     </style>
     <script>
         tailwind.config = {
@@ -364,13 +384,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <!-- Main Box -->
         <div class="bg-brown w-full max-w-xl md:max-w-2xl mx-auto border-[5px] border-orange rounded-xl pt-10 pb-6 px-6">
+            <div id="success-message" class="success-message">
+                Profile updated successfully!
+            </div>
+            
             <?php if (isset($_GET['success']) && $_GET['success'] === 'password'): ?>
                 <div class="bg-green-500 text-white p-4 mb-4 rounded">
                     Password updated successfully!
-                </div>
-            <?php elseif (isset($_GET['success']) && $_GET['success'] === 'profile'): ?>
-                <div class="bg-green-500 text-white p-4 mb-4 rounded">
-                    Profile updated successfully!
                 </div>
             <?php endif; ?>
             
@@ -385,7 +405,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="flex flex-col md:flex-row gap-4 mb-5">
                     <div class="flex-1">
                         <label class="block text-white text-xs uppercase mb-2">FULL NAME</label>
-                        <input type="text" name="fullname" value="<?php echo htmlspecialchars($user['username'] ?? ''); ?>" 
+                        <input type="text" name="fullname" value="<?php echo htmlspecialchars($user['full_name'] ?? ''); ?>" 
                                class="w-full h-12 px-4 bg-white border-[4px] border-orange rounded-lg font-[kongtext] text-sm text-black">
                     </div>
                     <div class="flex-1">
@@ -394,9 +414,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 class="w-full h-12 px-4 bg-white border-[4px] border-orange rounded-lg font-[kongtext] text-sm text-black appearance-none bg-no-repeat bg-right-4"
                                 style="background-image: url('data:image/svg+xml;utf8,<svg fill=&quot;black&quot; height=&quot;24&quot; viewBox=&quot;0 0 24 24&quot; width=&quot;24&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;><path d=&quot;M7 10l5 5 5-5z&quot;/></svg>'); background-position: right 10px center;">
                             <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
+                            <option value="Male" <?php echo ($user['gender'] === 'Male') ? 'selected' : ''; ?>>Male</option>
+                            <option value="Female" <?php echo ($user['gender'] === 'Female') ? 'selected' : ''; ?>>Female</option>
+                            <option value="Other" <?php echo ($user['gender'] === 'Other') ? 'selected' : ''; ?>>Other</option>
+                            <option value="Prefer not to say" <?php echo ($user['gender'] === 'Prefer not to say') ? 'selected' : ''; ?>>Prefer not to say</option>
                         </select>
                     </div>
                 </div>
@@ -410,7 +431,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="flex-1">
                         <label class="block text-white text-xs uppercase mb-2">DATE OF BIRTH</label>
-                        <input type="text" name="dob"
+                        <input type="date" name="dob" value="<?php echo htmlspecialchars($user['date_of_birth'] ?? ''); ?>"
                                class="w-full h-12 px-4 bg-white border-[4px] border-orange rounded-lg font-[kongtext] text-sm text-black">
                     </div>
                 </div>
@@ -430,7 +451,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <!-- Buttons -->
                 <div class="flex justify-center gap-5 mt-6">
-                    <button type="button" onclick="location.href='../auth/logout.php'" 
+                    <button type="button" id="logoutBtn"
                             class="gradient-red border-[4px] border-brown-dark rounded-xl w-40 h-12 text-white font-[kongtext] text-sm uppercase">
                         Log out
                     </button>
@@ -495,26 +516,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     
-    <!-- Notification Elements -->
-    <div id="successNotification" class="notification success">
-        Password updated successfully!
-    </div>
-    <div id="profileNotification" class="notification success">
-        Profile updated successfully!
-    </div>
-    <div id="errorNotification" class="notification error">
-        An error occurred. Please try again.
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="logout-modal">
+        <div class="logout-modal-content">
+            <div class="logout-title">
+                <h2 class="text-white text-lg">LOGOUT</h2>
+            </div>
+            
+            <p class="text-white my-6">Are you sure you want to log out?</p>
+            
+            <div class="flex justify-center gap-6 mt-6">
+                <button id="cancelLogout" class="gradient-red border-[4px] border-brown-dark rounded-xl px-4 py-2 text-white font-[kongtext] text-sm uppercase">
+                    CANCEL
+                </button>
+                <button onclick="location.href='logout.php'" class="gradient-button border-[4px] border-brown-dark rounded-xl px-4 py-2 text-white font-[kongtext] text-sm uppercase">
+                    LOGOUT
+                </button>
+            </div>
+        </div>
     </div>
     
     <script>
         // Get the modal
         const modal = document.getElementById("passwordModal");
+        const logoutModal = document.getElementById("logoutModal");
         
         // Get the button that opens the modal
         const btn = document.getElementById("changePasswordBtn");
+        const logoutBtn = document.getElementById("logoutBtn");
         
         // Get the cancel button
         const cancelBtn = document.getElementById("cancelPasswordBtn");
+        const cancelLogoutBtn = document.getElementById("cancelLogout");
         
         // When the user clicks the button, open the modal 
         btn.onclick = function() {
@@ -526,10 +559,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             modal.style.display = "none";
         }
         
+        // Logout modal controls
+        logoutBtn.onclick = function() {
+            logoutModal.style.display = "block";
+        }
+        
+        cancelLogoutBtn.onclick = function() {
+            logoutModal.style.display = "none";
+        }
+        
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
+            }
+            if (event.target == logoutModal) {
+                logoutModal.style.display = "none";
             }
         }
         
@@ -581,50 +626,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         });
         
-        // Notification functions
-        function showNotification(element, duration = 3000) {
-            element.classList.add('show');
-            setTimeout(() => {
-                element.classList.remove('show');
-            }, duration);
-        }
-        
-        // Check for URL parameters to show notifications
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            if (urlParams.get('success') === 'password') {
-                showNotification(document.getElementById('successNotification'));
-            } else if (urlParams.get('success') === 'profile') {
-                showNotification(document.getElementById('profileNotification'));
-            }
+        // Form submission - store flag in localStorage
+        document.getElementById('profileForm').addEventListener('submit', function() {
+            localStorage.setItem('showSuccess', 'true');
         });
         
-        // Form submission with notification
-        const profileForm = document.querySelector('form:not(#passwordForm)');
-        if (profileForm) {
-            profileForm.addEventListener('submit', function(e) {
-                localStorage.setItem('showProfileNotification', 'true');
-            });
-        }
-        
-        const passwordForm = document.getElementById('passwordForm');
-        if (passwordForm) {
-            passwordForm.addEventListener('submit', function(e) {
-                localStorage.setItem('showPasswordNotification', 'true');
-            });
-        }
-        
-        // Check for notifications from previous submissions
-        if (localStorage.getItem('showPasswordNotification') === 'true') {
-            showNotification(document.getElementById('successNotification'));
-            localStorage.removeItem('showPasswordNotification');
-        }
-        
-        if (localStorage.getItem('showProfileNotification') === 'true') {
-            showNotification(document.getElementById('profileNotification'));
-            localStorage.removeItem('showProfileNotification');
-        }
+        // Check if we should show success message on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('showSuccess')) {
+                localStorage.removeItem('showSuccess');
+                let successMsg = document.getElementById('success-message');
+                successMsg.style.display = 'block';
+                
+                // Hide the message after 3 seconds
+                setTimeout(function() {
+                    successMsg.style.display = 'none';
+                }, 3000);
+            }
+        });
     </script>
 </body>
 </html> 

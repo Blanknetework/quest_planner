@@ -172,7 +172,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['password'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password - Quest Planner</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../assets/css/style.css">
     <style>
         @font-face {
             font-family: 'KongText';
@@ -181,108 +180,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['password'])) {
             font-style: normal;
         }
         
-        :root {
-            --pixel-font: 'KongText', 'Courier New', monospace, system-ui;
-            --dark-text: #000000;
-
-        }
-
-        .game-container {
+        body {
+            font-family: 'KongText', monospace;
             background-image: url('../assets/images/bggg.jpg');
             background-size: cover;
+            background-position: center;
             background-attachment: fixed;
-            min-height: 100vh;
-            overflow-x: hidden;
-            padding: 20px;
-        }
-
-       
-        .auth-form {
-            background-color: var(--quest-box-tan);
-            border: 4px solid var(--border-brown);
-            border-radius: 0; /* Square corners for pixel look */
-            padding: 20px;
-            max-width: 400px;
-            margin: 0 auto;
-            margin-top: 50px;
-        }
-
-        .auth-header {
-            background-color: var(--button-orange);
-            color: #FFFFFF;
-            font-weight: bold;
-            text-align: center;
-            padding: 10px 0;
-            margin: -20px -20px 20px -20px;
-            border-bottom: 4px solid var(--border-brown);
-            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .auth-input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 3px solid var(--border-brown);
-            border-radius: 0; /* Square corners for pixel look */
-            background-color: #FFF;
-            font-family: var(--pixel-font);
-            font-size: 12px;
-            color: #000;
         }
         
-        .title-banner {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            margin-bottom: 20px;
-            padding: 10px;
-        }
-
-        .title-box {
-            width: 56px;
-            height: 50px;
-            background-color: #4D2422;
-            border-radius: 10px;
-            flex-shrink: 0;
-            margin-right: 15px;
-        }
-
-        .title-image {
-            max-width: 250px;
-            height: auto;
-            align-items: center;
-            justify-content: center;
-            margin-top: 10px;
-        }
-
-
-        .auth-input[type="password"] {
-            font-family: Arial, sans-serif !important; /* Our font KongText dont support special characters so wala tayong choice, kung hindi gumamit ng standard font */
-            letter-spacing: 2px;
-            color: #000000;
-        }
-
-
-        .auth-button {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--button-orange);
-            color: white;
-            border: 3px solid var(--border-brown);
-            cursor: pointer;
-            text-transform: uppercase;
-            font-family: var(--pixel-font);
-            font-size: 14px;
-            transition: opacity 0.3s;
-        }
-
-        .auth-button:hover {
-            opacity: 0.9;
-        }
-
         .password-field {
             position: relative;
             width: 100%;
@@ -290,108 +195,125 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['password'])) {
 
         .password-toggle {
             position: absolute;
-            right: 10px;
-            top: 35%;
+            right: 15px;
+            top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            color: var(--border-brown);
+            color: #8A4B22;
             width: 20px;
             height: 20px;
         }
+        
+        .title-gradient {
+            background: linear-gradient(90deg, #FFAA4B, #FF824E);
+        }
     </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brown: {
+                            DEFAULT: '#75341A',
+                            dark: '#8A4B22'
+                        },
+                        orange: {
+                            DEFAULT: '#FF9926',
+                            light: '#FFAA4B',
+                            dark: '#FF824E'
+                        },
+                        inputBg: '#FFEAE4',
+                        buttonOrange: '#FDB21C'
+                    }
+                }
+            }
+        };
+    </script>
 </head>
-<body>
-    <div class="game-container">
-        <div class="container mx-auto px-4 py-4">
-              <!-- Title Banner -->
-            <div class="title-banner">
-                <div class="title-box"></div>
-                <img src="../assets/images/Quest-Planner.png" alt="QUEST PLANNER" class="title-image">
-            </div>
-
-            <div class="auth-form">
-                <div class="auth-header">RESET PASSWORD</div>
-
-                <?php if($success): ?>
-                    <div class="bg-green-100 border-2 border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                        <?php echo htmlspecialchars($success); ?>
-                        <p class="mt-2">
-                            <a href="login.php" class="text-green-700 underline">Go to Login</a>
-                        </p>
+<body class="min-h-screen flex justify-center items-center m-0 p-0">
+    <div>
+        <!-- Header Box: Center the title box -->
+        <div class="title-gradient border-[7px] border-[#8A4B22] w-[450px] py-2 px-4 text-center mb-[-25px] z-10 relative mx-auto">
+            <h1 class="text-white text-[16px] font-bold">CREATE NEW PASSWORD</h1>
+        </div>
+        
+        <!-- Main Box -->
+        <div class="bg-[#75341A] border-[5px] border-[#FF9926] rounded-[13px] w-[600px] h-[500px] py-8 px-8 pt-10 z-0 relative">
+            <?php if($success): ?>
+                <div class="bg-green-800/20 border-2 border-green-500 text-white p-3 mb-4 rounded text-xs text-center">
+                    <?php echo htmlspecialchars($success); ?>
+                </div>
+            <?php else: ?>
+                <?php if($error): ?>
+                    <div class="bg-red-800/20 border-2 border-red-500 text-white p-3 mb-4 rounded text-xs text-center">
+                        <?php echo htmlspecialchars($error); ?>
                     </div>
-                <?php else: ?>
-                    <?php if($error): ?>
-                        <div class="bg-red-100 border-2 border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                            <?php echo htmlspecialchars($error); ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <form method="POST" action="reset_password.php?token=<?php echo htmlspecialchars($token); ?>" onsubmit="return validateForm()">
-                        <div class="form-group">
-                            <div class="password-field">
-                                <input type="password" name="password" id="password" class="auth-input" placeholder="NEW PASSWORD" required>
-                                <svg class="password-toggle" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="password-field">
-                                <input type="password" name="confirm_password" id="confirm_password" class="auth-input" placeholder="CONFIRM PASSWORD" required>
-                                <svg class="password-toggle" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </div>
-                        <button type="submit" class="auth-button">Reset Password</button>
-                    </form>
                 <?php endif; ?>
-            </div>
+                
+                <form method="POST" action="reset_password.php?token=<?php echo htmlspecialchars($token); ?>" onsubmit="return validateForm()" class="h-full flex flex-col">
+                    <!-- New Password Field -->
+                    <div class="mb-6">
+                        <label class="block text-white text-sm mb-2">NEW PASSWORD</label>
+                        <input type="password" name="password" id="password" 
+                            class="w-full bg-white border-[5px] border-buttonOrange rounded-md py-3 px-3 font-sans" required>
+                    </div>
+                    
+                    <!-- Re-enter Password Field -->
+                    <div class="mb-6">
+                        <label class="block text-white text-sm mb-2">RE-ENTER PASSWORD</label>
+                        <input type="password" name="confirm_password" id="confirm_password" 
+                            class="w-full bg-white border-[5px] border-buttonOrange rounded-md py-3 px-3 font-sans" required>
+                    </div>
+                    
+                    <!-- Requirements -->
+                    <div class="text-white text-sm mb-auto">
+                        MUST CONTAIN:
+                        <ul class="ml-6 mt-2 leading-loose">
+                            <li>8 CHARACTERS OR MORE</li>
+                            <li>UPPERCASE</li>
+                            <li>LOWERCASE</li>
+                            <li>NUMBER</li>
+                            <li>SPECIAL CHARACTER</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Submit Button: positioned at bottom -->
+                    <div class="mt-auto flex justify-center mb-8">
+                        <button type="submit" 
+                            class="bg-gradient-to-r from-orange-light to-orange-dark border-[5px] border-brown-dark rounded-lg w-[320px] py-3 text-white text-center font-bold text-sm uppercase tracking-wider">
+                            Log in
+                        </button>
+                    </div>
+                </form>
+            <?php endif; ?>
         </div>
     </div>
-
-
     
     <script>
     function validateForm() {
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm_password').value;
-
+        
+        // Check if passwords match
         if (password !== confirmPassword) {
             alert('Passwords do not match!');
             return false;
         }
+        
+        // Check password requirements
+        const minLength = password.length >= 8;
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasLowercase = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+        
+        if (!minLength || !hasUppercase || !hasLowercase || !hasNumber || !hasSpecial) {
+            alert('Password must contain at least 8 characters, uppercase, lowercase, number, and special character!');
+            return false;
+        }
+        
         return true;
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const toggles = document.querySelectorAll('.password-toggle');
-        
-        toggles.forEach(toggle => {
-            toggle.addEventListener('click', function() {
-                const inputField = this.previousElementSibling;
-                const currentType = inputField.getAttribute('type');
-                
-                if (currentType === 'password') {
-                    inputField.setAttribute('type', 'text');
-                    this.innerHTML = `
-                        <path d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" />
-                        <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
-                    `;
-                } else {
-                    inputField.setAttribute('type', 'password');
-                    this.innerHTML = `
-                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                    `;
-                }
-            });
-        });
-    });
     </script>
-
-    <script src="../assets/js/script.js"></script>
 </body>
 </html>

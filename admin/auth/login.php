@@ -4,7 +4,7 @@ require_once '../../config/database.php';
 
 // Check if already logged in
 if (isset($_SESSION['admin_id'])) {
-    header('Location: index.php');
+    header('Location: ../index.php');
     exit;
 }
 
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['admin_username'] = $admin['username'];
             
             // Redirect to admin dashboard
-            header('Location: ../index.php');
+            header('Location: index.php');
             exit;
         } else {
             $error = 'Invalid username or password';

@@ -518,7 +518,7 @@ try {
                             <span class="icon-label">NOTIFS</span>
                 </div>
                         <div class="icon-container">
-                            <img src="../assets/images/5.svg" alt="Guild" class="header-icon">
+                            <img src="../assets/images/5.svg" alt="Guild" class="header-icon" onclick="location.href='pages/guild.php'" style="cursor: pointer;">
                             <span class="icon-label">GUILD</span>
                         </div>
                         <div class="icon-container">
