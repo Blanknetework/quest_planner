@@ -1,11 +1,11 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header('Location: auth/login.php');
+    header('Location: landing.php');
     exit;
 }
 
-// Include database connection
+
 require_once 'config/database.php';
 
 // Process form submissions first, before any output
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
     }
     
-    // Complete a quest
+    // Complete a questlo
     else if ($action === 'complete_quest' && isset($_POST['quest_id'])) {
         $questId = (int)$_POST['quest_id'];
         
