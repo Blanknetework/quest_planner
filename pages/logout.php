@@ -2,6 +2,23 @@
 // Start the session
 session_start();
 
+// Store the user ID before unsetting session variables
+$userId = $_SESSION['user_id'] ?? null;
+
+// Reset streak_claimed_today in the database if user is logged in
+if ($userId) {
+    require_once '../config/database.php';
+    
+    try {
+        // Update the user's streak_claimed_today to 0
+        $stmt = $pdo->prepare("UPDATE users SET streak_claimed_today = 0 WHERE id = ?");
+        $stmt->execute([$userId]);
+    } catch (PDOException $e) {
+        // Silently handle error - we don't want to interrupt the logout process
+        error_log("Error resetting streak_claimed_today: " . $e->getMessage());
+    }
+}
+
 // Unset all session variables
 $_SESSION = array();
 

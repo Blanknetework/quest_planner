@@ -55,6 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = $pdo->prepare("INSERT INTO users (username, email, password, verification_token, full_name, gender, date_of_birth, level) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$username, $email, password_hash($password, PASSWORD_DEFAULT), $verification_token, $full_name, $gender, $date_of_birth, 1]);
         
+        // Get the user ID of the newly registered user
+        $userId = $pdo->lastInsertId();
+        
         // Debug: Log successful database insertion
         error_log("User inserted successfully");
         
@@ -129,8 +132,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ";
 
         if($mail->send()) {
-            $success = "Registration successful! We've sent a verification link to your email.";
-            error_log("Verification email sent successfully to {$email}");
+            // Store user ID in session
+            $_SESSION['user_id'] = $userId;
+            $_SESSION['username'] = $username;
+            
+            // Redirect to avatar creation page
+            header('Location: create_avatar.php');
+            exit;
         }
     } catch(PDOException $e) {
         error_log("PDO Exception: " . $e->getMessage() . " - Code: " . $e->getCode());
@@ -272,94 +280,84 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     <!-- Main Box -->
     <div class="bg-[#75341A] border-[5px] border-[#FF9926] rounded-[13px] w-[320px] md:w-[700px] p-6 pt-10 z-0 relative">
-        <?php if($success): ?>
-            <div class="text-white text-center">
-                <p class="uppercase text-center font-bold mb-4 text-sm">REGISTRATION SUCCESSFUL!</p>
-                <p class="uppercase text-center mb-6 text-sm">PLEASE CHECK YOUR EMAIL TO VERIFY YOUR ACCOUNT.</p>
-                <div class="mt-8 text-center">
-                    <a href="login.php" class="text-[#FFEAE4] text-xs hover:underline">Go to login</a>
+        <?php if($error): ?>
+            <div class="bg-red-500 text-white p-2 mb-4 rounded text-center text-xs">
+                <?php echo htmlspecialchars($error); ?>
+            </div>
+        <?php endif; ?>
+        
+        <form method="POST" action="register.php" id="registerForm" onsubmit="return validateForm()" class="flex flex-col items-center">
+            <div class="grid grid-cols-2 gap-4 w-full mb-3">
+                <div>
+                    <label for="full_name" class="text-white block mb-1 text-xs">FULL NAME</label>
+                    <input type="text" name="full_name" id="full_name" class="auth-input" required>
+                </div>
+                <div>
+                    <label for="gender" class="text-white block mb-1 text-xs">GENDER</label>
+                    <select name="gender" id="gender" class="auth-input" required>
+                        <option value="" disabled selected>Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
                 </div>
             </div>
-        <?php else: ?>
-            <?php if($error): ?>
-                <div class="bg-red-500 text-white p-2 mb-4 rounded text-center text-xs">
-                    <?php echo htmlspecialchars($error); ?>
-                </div>
-            <?php endif; ?>
             
-            <form method="POST" action="register.php" id="registerForm" onsubmit="return validateForm()" class="flex flex-col items-center">
-                <div class="grid grid-cols-2 gap-4 w-full mb-3">
-                    <div>
-                        <label for="full_name" class="text-white block mb-1 text-xs">FULL NAME</label>
-                        <input type="text" name="full_name" id="full_name" class="auth-input" required>
-                    </div>
-                    <div>
-                        <label for="gender" class="text-white block mb-1 text-xs">GENDER</label>
-                        <select name="gender" id="gender" class="auth-input" required>
-                            <option value="" disabled selected>Select gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                            <option value="Prefer not to say">Prefer not to say</option>
-                        </select>
-                    </div>
+            <div class="grid grid-cols-2 gap-4 w-full mb-3">
+                <div>
+                    <label for="username" class="text-white block mb-1 text-xs">USERNAME</label>
+                    <input type="text" name="username" id="username" class="auth-input" required>
                 </div>
-                
-                <div class="grid grid-cols-2 gap-4 w-full mb-3">
-                    <div>
-                        <label for="username" class="text-white block mb-1 text-xs">USERNAME</label>
-                        <input type="text" name="username" id="username" class="auth-input" required>
-                    </div>
-                    <div>
-                        <label for="date_of_birth" class="text-white block mb-1 text-xs">DATE OF BIRTH</label>
-                        <input type="date" name="date_of_birth" id="date_of_birth" class="auth-input" required>
-                    </div>
+                <div>
+                    <label for="date_of_birth" class="text-white block mb-1 text-xs">DATE OF BIRTH</label>
+                    <input type="date" name="date_of_birth" id="date_of_birth" class="auth-input" required>
                 </div>
-                
-                <div class="w-full mb-3">
-                    <label for="email" class="text-white block mb-1 text-xs">EMAIL ADDRESS</label>
-                    <input type="email" name="email" id="email" class="auth-input" required>
+            </div>
+            
+            <div class="w-full mb-3">
+                <label for="email" class="text-white block mb-1 text-xs">EMAIL ADDRESS</label>
+                <input type="email" name="email" id="email" class="auth-input" required>
+            </div>
+            
+            <div class="w-full mb-3">
+                <label for="password" class="text-white block mb-1 text-xs">CREATE PASSWORD</label>
+                <div class="password-field">
+                    <input type="password" name="password" id="password" class="auth-input" required minlength="8" maxlength="20">
+                    <svg class="password-toggle" viewBox="0 0 20 20" fill="currentColor" data-password="password">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                    </svg>
                 </div>
-                
-                <div class="w-full mb-3">
-                    <label for="password" class="text-white block mb-1 text-xs">CREATE PASSWORD</label>
-                    <div class="password-field">
-                        <input type="password" name="password" id="password" class="auth-input" required minlength="8" maxlength="20">
-                        <svg class="password-toggle" viewBox="0 0 20 20" fill="currentColor" data-password="password">
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
+            </div>
+            
+            <div class="w-full mb-6">
+                <label for="confirm_password" class="text-white block mb-1 text-xs">RE-ENTER PASSWORD</label>
+                <div class="password-field">
+                    <input type="password" name="confirm_password" id="confirm_password" class="auth-input" required minlength="8" maxlength="20">
+                    <svg class="password-toggle" viewBox="0 0 20 20" fill="currentColor" data-password="confirm_password">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                    </svg>
                 </div>
-                
-                <div class="w-full mb-6">
-                    <label for="confirm_password" class="text-white block mb-1 text-xs">RE-ENTER PASSWORD</label>
-                    <div class="password-field">
-                        <input type="password" name="confirm_password" id="confirm_password" class="auth-input" required minlength="8" maxlength="20">
-                        <svg class="password-toggle" viewBox="0 0 20 20" fill="currentColor" data-password="confirm_password">
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                </div>
-                
-                <div class="text-xs text-white mb-4 w-full">
-                    <p id="passwordRequirements" class="text-center">
-                        <?php if(isset($error) && strpos($error, 'Password') !== false): ?>
-                            <span class="text-red-400"><?php echo htmlspecialchars($error); ?></span>
-                        <?php else: ?>
-                            Password must be 8-20 characters
-                        <?php endif; ?>
-                    </p>
-                </div>
-                
-                <button type="submit" class="auth-button w-[80%] py-2 mb-3 uppercase">SIGN</button>
-                
-                <div class="mt-3 text-center">
-                    <a href="login.php" class="text-[#FFEAE4] text-xs hover:underline">ALREADY HAVE AN ACCOUNT? LOG IN</a>
-                </div>
-            </form>
-        <?php endif; ?>
+            </div>
+            
+            <div class="text-xs text-white mb-4 w-full">
+                <p id="passwordRequirements" class="text-center">
+                    <?php if(isset($error) && strpos($error, 'Password') !== false): ?>
+                        <span class="text-red-400"><?php echo htmlspecialchars($error); ?></span>
+                    <?php else: ?>
+                        Password must be 8-20 characters
+                    <?php endif; ?>
+                </p>
+            </div>
+            
+            <button type="submit" class="auth-button w-[80%] py-2 mb-3 uppercase">SIGN</button>
+            
+            <div class="mt-3 text-center">
+                <a href="login.php" class="text-[#FFEAE4] text-xs hover:underline">ALREADY HAVE AN ACCOUNT? LOG IN</a>
+            </div>
+        </form>
     </div>
     
     <!-- Next button in the corner -->
